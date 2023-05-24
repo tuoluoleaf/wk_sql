@@ -71,3 +71,12 @@ create table magical_nine_turn
 ) comment '神奇九转';
 
 
+-- stock_industry_tmp：股票行业中间表
+create table stock_industry_tmp
+(
+    id            int primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    industry_name varchar(20) comment '行业名称'
+);
+
