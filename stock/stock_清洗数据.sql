@@ -95,13 +95,15 @@ where rn > 1
 ;
 
 -- -----------------------添加：股票行业---------------------------
+-- 添加：股票行业
+update stock_base_info t1
+set industry_name = (select industry_name from stock_industry_tmp t2 where t1.stock_code = t2.stock_code)
+where industry_name is null
+;
+
+-- ------------------ 增量股票信息 ------------------
 #stock_base_info：缺失的股票 <-- stock_industry_tmp
 select distinct stock_code, stock_name
 from stock_industry_tmp
 where stock_code not in (select stock_code from stock_base_info)
-;
-
-update stock_base_info t1
-set industry_name = (select industry_name from stock_industry_tmp t2 where t1.stock_code = t2.stock_code)
-where industry_name is null
 ;

@@ -11,7 +11,7 @@ create table stock_base_info
     stock_name    varchar(20) comment '股票名称',
     market        varchar(10) comment '市场',
     industry_name varchar(20) comment '行业名称',
-
+    turnover_gt_8w varchar(4) comment '成交量大于8W',
 
     create_time   timestamp default current_timestamp comment '创建时间',
     create_user   varchar(20) comment '创建人',
