@@ -1,38 +1,39 @@
--- ---------------   去除两边空格  ----------------------------
-select '去除两边空格' from dual;
+-- ---------------   去除两边空格、中间空格  ----------------------------
 update stock_industry_tmp
-set stock_code = replace(trim(stock_code), '\r', ''),
-    stock_name = replace(trim(stock_name), '\r', ''),
-    industry_name = replace(trim(industry_name), '\r', '')
+set stock_code    = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
+    stock_name    = replace(replace(trim(stock_name), '\r', ''), ' ', ''),
+    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', '')
 ;
 
 update stock_base_info
-set  stock_code = replace(trim(stock_code), '\r', ''),
-    stock_name = replace(trim(stock_name), '\r', ''),
-    industry_name = replace(trim(industry_name), '\r', '')
+set stock_code    = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
+    stock_name    = replace(replace(replace(trim(stock_name), '\r', ''), ' ', ''), '-U', ''),
+    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', '')
 ;
 
 update magical_nine_turn
-set   stock_code = replace(trim(stock_code), '\r', ''),
-    stock_name = replace(trim(stock_name), '\r', ''),
-    turn_type = replace(trim(turn_type), '\r', '')
+set stock_code = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
+    stock_name = replace(replace(trim(stock_name), '\r', ''), ' ', ''),
+    turn_type  = replace(replace(trim(turn_type), '\r', ''), ' ', '')
 ;
 
 update main_force_secret
-set   stock_code = replace(trim(stock_code), '\r', ''),
-    stock_name = replace(trim(stock_name), '\r', ''),
-    will = replace(trim(will), '\r', '')
+set stock_code = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
+    stock_name = replace(replace(trim(stock_name), '\r', ''), ' ', ''),
+    will       = replace(replace(trim(will), '\r', ''), ' ', '')
 ;
 
 update industry_category
-set industry_code = replace(trim(industry_code), '\r', ''),
-    industry_name = replace(trim(industry_name), '\r', '')
+set industry_code = replace(replace(trim(industry_code), '\r', ''), ' ', ''),
+    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', '')
 ;
+
+-- --------------- 删除退市股票 ---------------
+delete from stock_base_info where stock_name like '%退市%' and stock_name like '%退%';
+
 
 
 -- -------------- 空数据 ---------------
-select '空数据' from dual;
-
 select * from stock_base_info where stock_code is null or stock_name is null;
 select * from main_force_secret where stock_code is null or stock_name is null;
 select * from magical_nine_turn where stock_code is null or stock_name is null;
@@ -42,7 +43,6 @@ select * from stock_industry_tmp where stock_code is null or stock_name is null;
 
 
 -- --------------------------------- 去重 ---------------------
-select '去重_股票信息' from dual;
 #股票信息
 select t1.*
 from stock_base_info t1,
@@ -62,7 +62,6 @@ where t1.stock_name = t2.stock_name and rn > 1
 order by t1.stock_name
 ;
 
-select '去重_神奇九转' from dual;
 #神奇九转
 select t1.*
 from magical_nine_turn t1,
@@ -83,7 +82,6 @@ order by t1.stock_name
 ;
 
 
-select '去重_主力秘密' from dual;
 #主力秘密
 select t1.*
 from main_force_secret t1,
@@ -104,7 +102,6 @@ order by t1.stock_name
 ;
 
 
-select '去重_股票行业中间表' from dual;
 #股票行业中间表
 select t1.*
 from stock_industry_tmp t1,
@@ -124,8 +121,10 @@ where t1.stock_name = t2.stock_name and t2.rn > 1
 order by t1.stock_name
 ;
 
+
+
+
 -- -----------------------添加：股票行业---------------------------
-select '添加：股票行业' from dual;
 -- 添加：股票行业
 update stock_base_info t1
 set industry_name = (select industry_name from stock_industry_tmp t2 where t1.stock_code = t2.stock_code)
@@ -133,10 +132,68 @@ where industry_name is null
 ;
 
 
-select '增量股票信息' from dual;
+select * from stock_base_info where industry_name is null order by stock_code;
+
+
 -- ------------------ 增量股票信息 ------------------
 #stock_base_info：缺失的股票 <-- stock_industry_tmp
 select distinct stock_code, stock_name
 from stock_industry_tmp
 where stock_code not in (select stock_code from stock_base_info)
 ;
+select distinct stock_code, stock_name
+from stock_industry_tmp
+where stock_name not in (select stock_name from stock_base_info)
+;
+
+# update stock_industry_tmp t1 set stock_name = (select stock_name from stock_base_info t2 where t1.stock_code = t2.stock_code);
+
+
+
+#stock_base_info：缺失的股票 <-- main_force_secret
+select *
+from main_force_secret
+where stock_code not in (select stock_code from stock_base_info)
+order by stock_code
+;
+
+# select *
+# from main_force_secret
+# where stock_name not in (select stock_name from stock_base_info)
+# order by stock_name
+# ;
+
+
+
+
+#stock_base_info：缺失的股票 <-- magical_nine_turn
+select *
+from magical_nine_turn
+where stock_code not in (select stock_code from stock_base_info)
+order by stock_code
+;
+
+# select *
+# from magical_nine_turn
+# where stock_name not in (select stock_name from stock_base_info)
+# order by stock_name
+# ;
+
+# update magical_nine_turn t1 set t1.stock_name = (select stock_name from stock_base_info t2 where t1.stock_name = t2.stock_name);
+
+
+
+
+-- ----------------- 股票成交量 --------------------------
+create table stock_daily_turnover
+(
+    id            int primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    turnover        numeric(64) comment '市场',
+    business_date date comment '业务日期'
+) comment '股票每日成交量';
+
+update stock_base_info
+set turnover_gt_8w = '是'
+where stock_code in (select distinct stock_code from stock_daily_turnover where turnover >= 80000);

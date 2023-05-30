@@ -1,4 +1,4 @@
-select current_date, date_add(current_date, interval -1 day ) from dual;
+select current_date, get_trade_day(current_date, -1) from dual;
 
 -- ------------------- 正向指标 -----------------------
 # [主力密码]#[主力进场|主力加仓]
@@ -12,7 +12,7 @@ from main_force_secret t1,
 where 1=1
   and t1.will in ('主力进场', '主力加仓')
   and t1.monitor_date <= current_date
-  and t1.monitor_date >= date_add(current_date, interval -1 day)
+  and t1.monitor_date >= get_trade_day(current_date, -1)
   #
   and base.stock_code = t1.stock_code
   and turnover_gt_8w = '是'
@@ -30,7 +30,7 @@ from magical_nine_turn t2,
 where 1=1
   and t2.turn_type = '红九转'
   and t2.signal_date <= current_date
-  and t2.signal_date >= date_add(current_date, interval -1 day)
+  and t2.signal_date >= get_trade_day(current_date, -1)
 
   #
   and base.stock_code = t2.stock_code
@@ -52,16 +52,16 @@ from main_force_secret t1,
 where t1.stock_code = t2.stock_code
   and t1.will in ('主力进场', '主力加仓')
   and t1.monitor_date <= current_date
-  and t1.monitor_date >= date_add(current_date, interval -7 day)
+  and t1.monitor_date >= get_trade_day(current_date, -1)
   #
   and t2.turn_type = '红九转'
   and t2.signal_date <= current_date
-  and t2.signal_date >= date_add(current_date, interval -7 day)
+  and t2.signal_date >= get_trade_day(current_date, -1)
 
   #
   and base.stock_code = t1.stock_code
   and turnover_gt_8w = '是'
-order by t1.monitor_date desc
+order by base.industry_name
 ;
 
 --  行业分布
@@ -75,7 +75,7 @@ from main_force_secret t1 left join stock_base_info base on t1.stock_code = base
 where 1=1
   and t1.will in ('主力进场', '主力加仓')
   and t1.monitor_date <= current_date
-  and t1.monitor_date >= date_add(current_date, interval -1 day )
+  and t1.monitor_date >= get_trade_day(current_date, -1)
 ;
 
 # [神奇九转].[红九转]  # 行业分布
@@ -88,7 +88,7 @@ from magical_nine_turn t2 left join stock_base_info base on t2.stock_code = base
 where 1=1
   and t2.turn_type = '红九转'
   and t2.signal_date <= current_date
-  and t2.signal_date >= date_add(current_date, interval -1 day )
+  and t2.signal_date >= get_trade_day(current_date, -1)
 ;
 
 # [主力密码]#[主力进场|主力加仓] or [神奇九转].[红九转]  # 行业分布
@@ -97,11 +97,14 @@ select t1.stock_code,
        t1.monitor_date as date,
        t1.will as tag,
        base.industry_name
-from main_force_secret t1 left join stock_base_info base on t1.stock_code = base.stock_code
+from main_force_secret t1,
+     stock_base_info base
 where 1=1
   and t1.will in ('主力进场', '主力加仓')
   and t1.monitor_date <= current_date
-  and t1.monitor_date >= date_add(current_date, interval -1 day )
+  and t1.monitor_date >= get_trade_day(current_date, -1)
+  and t1.stock_code = base.stock_code
+  and base.turnover_gt_8w = '是'
 
 union all
 
@@ -110,9 +113,13 @@ select t2.stock_code,
        t2.signal_date as date,
        t2.turn_type as tag,
        base.industry_name
-from magical_nine_turn t2 left join stock_base_info base on t2.stock_code = base.stock_code
+from magical_nine_turn t2,
+     stock_base_info base
 where 1=1
   and t2.turn_type = '红九转'
   and t2.signal_date <= current_date
-  and t2.signal_date >= date_add(current_date, interval -1 day )
+  and t2.signal_date >= get_trade_day(current_date, -1)
+  and t2.stock_code = base.stock_code
+  and base.turnover_gt_8w = '是'
+order by industry_name, stock_name
 ;

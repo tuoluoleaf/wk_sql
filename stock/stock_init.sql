@@ -80,3 +80,26 @@ create table stock_industry_tmp
     industry_name varchar(20) comment '行业名称'
 );
 
+-- stock_trade_day：交易日
+create table stock_trade_day
+(
+    id            int primary key auto_increment comment '主键id',
+    trade_day     date comment '交易日期'
+);
+
+-- 工作日函数
+DELIMITER $$
+create function get_trade_day(base_date date, n int) returns date
+    READS SQL DATA
+    DETERMINISTIC
+BEGIN
+
+    declare max_trade_day date default base_date;
+    declare t_n date default base_date;
+
+    select max(trade_day) into max_trade_day from stock_trade_day where trade_day <= base_date;
+    select trade_day into t_n from stock_trade_day where id = (select id from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
+
+    return t_n;
+end $$
+DELIMITER ;
