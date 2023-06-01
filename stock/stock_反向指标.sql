@@ -96,7 +96,8 @@ select t1.stock_code,
        t1.stock_name,
        t1.monitor_date as date,
        t1.will as tag,
-       base.industry_name
+       base.industry_name,
+       base.turnover_gt_8w
 from main_force_secret t1,
      stock_base_info base
 where 1=1
@@ -104,7 +105,7 @@ where 1=1
   and t1.monitor_date <= current_date
   and t1.monitor_date >= get_trade_day(current_date, -1)
   and t1.stock_code = base.stock_code
-  and base.turnover_gt_8w = '是'
+#   and base.turnover_gt_8w = '是'
 
 union all
 
@@ -112,7 +113,8 @@ select t2.stock_code,
        t2.stock_name,
        t2.signal_date as date,
        t2.turn_type as tag,
-       base.industry_name
+       base.industry_name,
+       base.turnover_gt_8w
 from magical_nine_turn t2,
      stock_base_info base
 where 1=1
