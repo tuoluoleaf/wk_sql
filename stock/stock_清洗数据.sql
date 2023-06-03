@@ -154,46 +154,26 @@ where stock_name not in (select stock_name from stock_base_info)
 select *
 from main_force_secret
 where stock_code not in (select stock_code from stock_base_info)
+and stock_name not like '%退%'
 order by stock_code
 ;
-
-# select *
-# from main_force_secret
-# where stock_name not in (select stock_name from stock_base_info)
-# order by stock_name
-# ;
-
-
-
 
 #stock_base_info：缺失的股票 <-- magical_nine_turn
 select *
 from magical_nine_turn
 where stock_code not in (select stock_code from stock_base_info)
+and stock_name not like '%退%'
 order by stock_code
 ;
 
-# select *
-# from magical_nine_turn
-# where stock_name not in (select stock_name from stock_base_info)
-# order by stock_name
-# ;
-
-# update magical_nine_turn t1 set t1.stock_name = (select stock_name from stock_base_info t2 where t1.stock_name = t2.stock_name);
-
-
-
 
 -- ----------------- 股票成交量 --------------------------
-create table stock_daily_turnover
-(
-    id            int primary key auto_increment comment '主键id',
-    stock_code    varchar(10) comment '股票代码',
-    stock_name    varchar(20) comment '股票名称',
-    turnover        numeric(64) comment '市场',
-    business_date date comment '业务日期'
-) comment '股票每日成交量';
+# update stock_base_info
+# set turnover_gt_8w = '是'
+# where stock_code in (select distinct stock_code from stock_daily_turnover where turnover >= 80000);
 
-update stock_base_info
-set turnover_gt_8w = '是'
-where stock_code in (select distinct stock_code from stock_daily_turnover where turnover >= 80000);
+# update stock_base_info
+# set turnover_gt_8w = '否'
+# where stock_code in (select distinct stock_code from stock_daily_turnover where turnover < 80000);
+
+select * from stock_base_info where turnover_gt_8w is null;
