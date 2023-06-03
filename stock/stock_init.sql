@@ -80,6 +80,16 @@ create table stock_industry_tmp
     industry_name varchar(20) comment '行业名称'
 );
 
+-- 股票每日成交量
+create table stock_daily_turnover
+(
+    id            int primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    turnover        numeric(64) comment '成交量',
+    business_date date comment '业务日期'
+) comment '股票每日成交量';
+
 -- stock_trade_day：交易日
 create table stock_trade_day
 (
