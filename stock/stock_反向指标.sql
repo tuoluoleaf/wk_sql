@@ -123,5 +123,5 @@ where 1=1
   and t2.signal_date >= get_trade_day(current_date, -1)
   and t2.stock_code = base.stock_code
   and base.turnover_gt_8w = '是'
-order by industry_name, stock_name
+order by industry_name, turnover_gt_8w, stock_name
 ;
