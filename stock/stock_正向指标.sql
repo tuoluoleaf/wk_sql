@@ -105,7 +105,7 @@ where 1=1
   and t1.monitor_date <= current_date
   and t1.monitor_date >= get_trade_day(current_date, -1)
   and t1.stock_code = base.stock_code
-  and base.turnover_gt_8w = '是'
+#   and base.turnover_gt_8w = '是'
 
 union all
 
@@ -122,7 +122,7 @@ where 1=1
   and t2.signal_date <= current_date
   and t2.signal_date >= get_trade_day(current_date, -1)
   and t2.stock_code = base.stock_code
-  and base.turnover_gt_8w = '是'
+#   and base.turnover_gt_8w = '是'
 order by industry_name, turnover_gt_8w, stock_name
 ;
 
@@ -147,7 +147,7 @@ from (select t1.stock_code,
         and t1.monitor_date <= current_date
         and t1.monitor_date >= get_trade_day(current_date, -1)
         and t1.stock_code = base.stock_code
-#         and base.turnover_gt_8w = '是'
+        and base.turnover_gt_8w = '是'
 
       union all
 
@@ -164,7 +164,7 @@ from (select t1.stock_code,
         and t2.signal_date <= current_date
         and t2.signal_date >= get_trade_day(current_date, -1)
         and t2.stock_code = base.stock_code
-#         and base.turnover_gt_8w = '是'
+        and base.turnover_gt_8w = '是'
       ) tmp1
 
 where tmp1.industry_name not in (select base.industry_name
@@ -175,7 +175,7 @@ where tmp1.industry_name not in (select base.industry_name
                                    and t1.monitor_date <= current_date
                                    and t1.monitor_date >= get_trade_day(current_date, -1)
                                    and t1.stock_code = base.stock_code
-#                                    and base.turnover_gt_8w = '是'
+                                   and base.turnover_gt_8w = '是'
 
                                  union all
 
@@ -187,7 +187,7 @@ where tmp1.industry_name not in (select base.industry_name
                                    and t2.signal_date <= current_date
                                    and t2.signal_date >= get_trade_day(current_date, -1)
                                    and t2.stock_code = base.stock_code
-#                                    and base.turnover_gt_8w = '是'
+                                   and base.turnover_gt_8w = '是'
                                  )
 order by industry_name, turnover_gt_8w, stock_name
 ;

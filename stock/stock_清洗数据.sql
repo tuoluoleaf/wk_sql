@@ -1,14 +1,10 @@
 -- ---------------   去除两边空格、中间空格  ----------------------------
-update stock_industry_tmp
-set stock_code    = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
-    stock_name    = replace(replace(trim(stock_name), '\r', ''), ' ', ''),
-    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', '')
-;
 
 update stock_base_info
 set stock_code    = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
     stock_name    = replace(replace(replace(trim(stock_name), '\r', ''), ' ', ''), '-U', ''),
-    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', '')
+    industry_name = replace(replace(trim(industry_name), '\r', ''), ' ', ''),
+    market = replace(replace(replace(trim(market), '\r', ''), ' ', ''), '\n', '')
 ;
 
 update magical_nine_turn

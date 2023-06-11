@@ -6,17 +6,18 @@ drop table if exists magical_nine_turn;
 -- 股票基本信息：stock_base_info
 create table stock_base_info
 (
-    id            int primary key auto_increment comment '主键id',
-    stock_code    varchar(10) comment '股票代码',
-    stock_name    varchar(20) comment '股票名称',
-    market        varchar(10) comment '市场',
-    industry_name varchar(20) comment '行业名称',
+    id             int primary key auto_increment comment '主键id',
+    stock_code     varchar(10) comment '股票代码',
+    stock_name     varchar(20) comment '股票名称',
+    market         varchar(10) comment '市场',
+    industry_name  varchar(20) comment '行业名称',
     turnover_gt_8w varchar(4) comment '成交量大于8W',
 
-    create_time   timestamp default current_timestamp comment '创建时间',
-    create_user   varchar(20) comment '创建人',
-    update_time   timestamp comment '更新时间',
-    update_user   varchar(20) comment '更新人'
+    create_by      varchar(64) default '' null comment '创建者',
+    create_time    datetime               null comment '创建时间',
+    update_by      varchar(64) default '' null comment '更新者',
+    update_time    datetime               null comment '更新时间',
+    remark         varchar(500)           null comment '备注'
 ) comment '股票基本信息';
 
 -- 行业分类；industry_category
@@ -90,12 +91,66 @@ create table stock_daily_turnover
     business_date date comment '业务日期'
 ) comment '股票每日成交量';
 
--- stock_trade_day：交易日
+-- 交易日
 create table stock_trade_day
 (
     id            int primary key auto_increment comment '主键id',
     trade_day     date comment '交易日期'
 );
+
+-- 股票分时交易:dn(日线未复权)
+create table stock_trade_dn
+(
+    id            bigint primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    trade_date    date comment '交易日期',
+    open_price    decimal(16, 2) comment '开盘价[元]',
+    close_price   decimal(16, 2) comment '收盘价[元]',
+    highest_price decimal(16, 2) comment '最高价[元]',
+    lowest_price  decimal(16, 2) comment '最低价[元]',
+    trade_num     decimal(16,2) comment '成交量[手]',
+    trade_money   decimal(16, 2) comment '成交额[元]',
+    zf            decimal(16, 2) comment '振幅[%]',
+    hs            decimal(16, 2) comment '换手率[%]',
+    zd            decimal(16, 2) comment '涨跌幅[%]',
+    zde           decimal(16, 2) comment '涨跌额[元]',
+    create_by     varchar(64) default '' null comment '创建者',
+    create_time   datetime               null comment '创建时间',
+    update_by     varchar(64) default '' null comment '更新者',
+    update_time   datetime               null comment '更新时间',
+    remark        varchar(500)           null comment '备注'
+) comment '股票交易_日线未复权';
+create index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date);
+create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
+
+
+-- 股票分时交易:dn(日线未复权):2015之前分表
+create table stock_trade_dn_2015
+(
+    id            bigint primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    trade_date    date comment '交易日期',
+    open_price    decimal(16, 2) comment '开盘价[元]',
+    close_price   decimal(16, 2) comment '收盘价[元]',
+    highest_price decimal(16, 2) comment '最高价[元]',
+    lowest_price  decimal(16, 2) comment '最低价[元]',
+    trade_num     decimal(16,2) comment '成交量[手]',
+    trade_money   decimal(16, 2) comment '成交额[元]',
+    zf            decimal(16, 2) comment '振幅[%]',
+    hs            decimal(16, 2) comment '换手率[%]',
+    zd            decimal(16, 2) comment '涨跌幅[%]',
+    zde           decimal(16, 2) comment '涨跌额[元]',
+    create_by     varchar(64) default '' null comment '创建者',
+    create_time   datetime               null comment '创建时间',
+    update_by     varchar(64) default '' null comment '更新者',
+    update_time   datetime               null comment '更新时间',
+    remark        varchar(500)           null comment '备注'
+) comment '股票交易_日线未复权_2015之前';
+create index idx_stock_trade_dn_2015 on stock_trade_dn_2015 (stock_code, trade_date);
+create index idx_stock_trade_dn_2015_date on stock_trade_dn_2015 (trade_date);
+
 
 -- 工作日函数
 DELIMITER $$
