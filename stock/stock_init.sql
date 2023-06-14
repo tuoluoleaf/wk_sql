@@ -20,6 +20,10 @@ create table stock_base_info
     remark         varchar(500)           null comment '备注'
 ) comment '股票基本信息';
 
+create index idx_stock_base_info on stock_base_info (stock_code);
+
+
+
 -- 行业分类；industry_category
 create table industry_category
 (
@@ -150,6 +154,37 @@ create table stock_trade_dn_2015
 ) comment '股票交易_日线未复权_2015之前';
 create index idx_stock_trade_dn_2015 on stock_trade_dn_2015 (stock_code, trade_date);
 create index idx_stock_trade_dn_2015_date on stock_trade_dn_2015 (trade_date);
+
+
+
+-- 股票MACD:dn(日线未复权)
+create table stock_macd_dn
+(
+    id          bigint primary key auto_increment comment '主键id',
+    stock_code  varchar(10) comment '股票代码',
+    stock_name  varchar(20) comment '股票名称',
+    trade_date  date comment '交易日期',
+    diff        decimal(16, 3) comment 'DIFF值',
+    dea         decimal(16, 3) comment 'DEA值',
+    macd        decimal(16, 3) comment 'MACD值',
+    ema12       decimal(16, 4) comment 'EMA[12]值',
+    ema26       decimal(16, 4) comment 'EMA[26]值',
+
+    create_by   varchar(64) default '' null comment '创建者',
+    create_time datetime               null comment '创建时间',
+    update_by   varchar(64) default '' null comment '更新者',
+    update_time datetime               null comment '更新时间',
+    remark      varchar(500)           null comment '备注'
+) comment '股票MACD_日线未复权';
+create index idx_stock_macd_dn on stock_macd_dn (stock_code, trade_date);
+create index idx_stock_macd_dn_date on stock_macd_dn (trade_date);
+
+
+
+
+
+
+
 
 
 -- 工作日函数
