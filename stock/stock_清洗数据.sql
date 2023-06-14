@@ -34,7 +34,6 @@ select * from stock_base_info where stock_code is null or stock_name is null;
 select * from main_force_secret where stock_code is null or stock_name is null;
 select * from magical_nine_turn where stock_code is null or stock_name is null;
 
-select * from stock_industry_tmp where stock_code is null or stock_name is null;
 
 
 
@@ -98,54 +97,8 @@ order by t1.stock_name
 ;
 
 
-#股票行业中间表
-select t1.*
-from stock_industry_tmp t1,
-    (select t.*,
-         row_number() over (partition by stock_code) rn
-    from stock_industry_tmp t) t2
-where t1.stock_code = t2.stock_code and t2.rn > 1
-order by t1.stock_code
-;
-
-select t1.*
-from stock_industry_tmp t1,
-    (select t.*,
-         row_number() over (partition by stock_name) rn
-    from stock_industry_tmp t) t2
-where t1.stock_name = t2.stock_name and t2.rn > 1
-order by t1.stock_name
-;
-
-
-
-
--- -----------------------添加：股票行业---------------------------
--- 添加：股票行业
-update stock_base_info t1
-set industry_name = (select industry_name from stock_industry_tmp t2 where t1.stock_code = t2.stock_code)
-where industry_name is null
-;
-
-
-select * from stock_base_info where industry_name is null order by stock_code;
-
 
 -- ------------------ 增量股票信息 ------------------
-#stock_base_info：缺失的股票 <-- stock_industry_tmp
-select distinct stock_code, stock_name
-from stock_industry_tmp
-where stock_code not in (select stock_code from stock_base_info)
-;
-select distinct stock_code, stock_name
-from stock_industry_tmp
-where stock_name not in (select stock_name from stock_base_info)
-;
-
-# update stock_industry_tmp t1 set stock_name = (select stock_name from stock_base_info t2 where t1.stock_code = t2.stock_code);
-
-
-
 #stock_base_info：缺失的股票 <-- main_force_secret
 select *
 from main_force_secret

@@ -103,9 +103,9 @@ from main_force_secret t1,
 where 1=1
   and t1.will in ('主力进场', '主力加仓')
   and t1.monitor_date <= current_date
-  and t1.monitor_date >= get_trade_day(current_date, -1)
+  and t1.monitor_date >= get_trade_day(current_date, -5)
   and t1.stock_code = base.stock_code
-#   and base.turnover_gt_8w = '是'
+  and base.turnover_gt_8w = '是'
 
 union all
 
@@ -120,10 +120,10 @@ from magical_nine_turn t2,
 where 1=1
   and t2.turn_type = '红九转'
   and t2.signal_date <= current_date
-  and t2.signal_date >= get_trade_day(current_date, -1)
+  and t2.signal_date >= get_trade_day(current_date, -5)
   and t2.stock_code = base.stock_code
-#   and base.turnover_gt_8w = '是'
-order by industry_name, turnover_gt_8w, stock_name
+  and base.turnover_gt_8w = '是'
+order by industry_name, turnover_gt_8w, date, stock_name
 ;
 
 
@@ -189,5 +189,5 @@ where tmp1.industry_name not in (select base.industry_name
                                    and t2.stock_code = base.stock_code
                                    and base.turnover_gt_8w = '是'
                                  )
-order by industry_name, turnover_gt_8w, stock_name
+order by industry_name, turnover_gt_8w, date, stock_name
 ;
