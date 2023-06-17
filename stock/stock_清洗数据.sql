@@ -96,6 +96,26 @@ where t1.stock_name = t2.stock_name and t1.monitor_date = t2.monitor_date and t1
 order by t1.stock_name
 ;
 
+-- macd
+select t1.*
+from stock_macd_dn t1,
+    (select t.*,
+         row_number() over (partition by stock_code, trade_date order by trade_date desc) rn
+    from stock_macd_dn t) t2
+where t1.stock_code = t2.stock_code and t1.trade_date = t2.trade_date and t2.rn > 1
+order by t1.stock_code
+;
+
+-- trade
+select t1.*
+from stock_trade_dn t1,
+    (select t.*,
+         row_number() over (partition by stock_code, trade_date order by trade_date desc) rn
+    from stock_trade_dn t) t2
+where t1.stock_code = t2.stock_code and t1.trade_date = t2.trade_date and t2.rn > 1
+order by t1.stock_code
+;
+
 
 
 -- ------------------ 增量股票信息 ------------------
@@ -126,3 +146,47 @@ order by stock_code
 # where stock_code in (select distinct stock_code from stock_daily_turnover where turnover < 80000);
 
 select * from stock_base_info where turnover_gt_8w is null;
+
+
+
+-- ----------------数据清洗 成交信息 && MACD ----------
+select trade_date, count(0)
+from stock_macd_dn
+group by trade_date
+order by trade_date desc;
+
+
+select trade_date, count(0)
+from stock_trade_dn
+group by trade_date
+order by trade_date desc;
+
+
+select t1.*
+from stock_macd_dn t1,
+    (select t.*,
+         row_number() over (partition by stock_code, trade_date) rn
+    from stock_macd_dn t) t2
+where t1.stock_code = t2.stock_code and t1.trade_date = t2.trade_date and t2.rn > 1
+;
+
+
+# delete
+# from stock_macd_dn
+# where id in (select t2.id
+#              from (select t.*,
+#                           row_number() over (partition by stock_code, trade_date) rn
+#                    from stock_macd_dn t) t2
+#              where t2.rn > 1)
+# ;
+
+
+
+select t1.*
+from stock_trade_dn t1,
+    (select t.*,
+         row_number() over (partition by stock_code, trade_date) rn
+    from stock_trade_dn t) t2
+where t1.stock_code = t2.stock_code and t1.trade_date = t2.trade_date and t2.rn > 1
+order by t1.stock_code
+;
