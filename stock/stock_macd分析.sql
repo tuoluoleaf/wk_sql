@@ -38,6 +38,6 @@ select smd.id,
 from stock_macd_dn smd
          left join stock_trade_dn std on smd.stock_code = std.stock_code and smd.trade_date = std.trade_date
 where 1=1
-and smd.stock_code = '000798'
+and smd.stock_code = '001324'
 order by smd.stock_code, smd.trade_date
 ;

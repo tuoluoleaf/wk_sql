@@ -112,17 +112,18 @@ create table stock_trade_dn
     close_price   decimal(16, 2) comment '收盘价[元]',
     highest_price decimal(16, 2) comment '最高价[元]',
     lowest_price  decimal(16, 2) comment '最低价[元]',
-    trade_num     decimal(16,2) comment '成交量[手]',
+    trade_num     decimal(16, 2) comment '成交量[手]',
     trade_money   decimal(16, 2) comment '成交额[元]',
     zf            decimal(16, 2) comment '振幅[%]',
     hs            decimal(16, 2) comment '换手率[%]',
     zd            decimal(16, 2) comment '涨跌幅[%]',
     zde           decimal(16, 2) comment '涨跌额[元]',
-    create_by     varchar(64) default '' null comment '创建者',
-    create_time   datetime               null comment '创建时间',
-    update_by     varchar(64) default '' null comment '更新者',
-    update_time   datetime               null comment '更新时间',
-    remark        varchar(500)           null comment '备注'
+
+    create_by     varchar(64) default 'sys'                                         null comment '创建者',
+    create_time   datetime    default current_timestamp                             null comment '创建时间',
+    update_by     varchar(64) default 'sys'                                         null comment '更新者',
+    update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark        varchar(500)                                                      null comment '备注'
 ) comment '股票交易_日线未复权';
 create unique index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date);
 create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
@@ -139,17 +140,18 @@ create table stock_trade_dn_2015
     close_price   decimal(16, 2) comment '收盘价[元]',
     highest_price decimal(16, 2) comment '最高价[元]',
     lowest_price  decimal(16, 2) comment '最低价[元]',
-    trade_num     decimal(16,2) comment '成交量[手]',
+    trade_num     decimal(16, 2) comment '成交量[手]',
     trade_money   decimal(16, 2) comment '成交额[元]',
     zf            decimal(16, 2) comment '振幅[%]',
     hs            decimal(16, 2) comment '换手率[%]',
     zd            decimal(16, 2) comment '涨跌幅[%]',
     zde           decimal(16, 2) comment '涨跌额[元]',
-    create_by     varchar(64) default '' null comment '创建者',
-    create_time   datetime               null comment '创建时间',
-    update_by     varchar(64) default '' null comment '更新者',
-    update_time   datetime               null comment '更新时间',
-    remark        varchar(500)           null comment '备注'
+
+    create_by     varchar(64) default 'sys'                                         null comment '创建者',
+    create_time   datetime    default current_timestamp                             null comment '创建时间',
+    update_by     varchar(64) default 'sys'                                         null comment '更新者',
+    update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark        varchar(500)                                                      null comment '备注'
 ) comment '股票交易_日线未复权_2015之前';
 create unique index idx_stock_trade_dn_2015 on stock_trade_dn_2015 (stock_code, trade_date);
 create index idx_stock_trade_dn_2015_date on stock_trade_dn_2015 (trade_date);
@@ -168,17 +170,18 @@ create table stock_macd_dn
     ema12       decimal(16, 4) comment 'EMA[12]值',
     ema26       decimal(16, 4) comment 'EMA[26]值',
 
-    create_by   varchar(64) default '' null comment '创建者',
-    create_time datetime               null comment '创建时间',
-    update_by   varchar(64) default '' null comment '更新者',
-    update_time datetime               null comment '更新时间',
-    remark      varchar(500)           null comment '备注'
+    create_by             varchar(64) default 'sys'                                         null comment '创建者',
+    create_time           datetime    default current_timestamp                             null comment '创建时间',
+    update_by             varchar(64) default 'sys'                                         null comment '更新者',
+    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark                varchar(500)                                                      null comment '备注'
 ) comment '股票MACD_日线未复权';
 create unique index idx_stock_macd_dn on stock_macd_dn (stock_code, trade_date);
 create index idx_stock_macd_dn_date on stock_macd_dn (trade_date);
 
 
 -- 股票MACD分析
+drop table  if exists stock_macd_analyze;
 create table stock_macd_analyze
 (
     id                    bigint primary key auto_increment comment '主键id',
@@ -186,19 +189,18 @@ create table stock_macd_analyze
     stock_name            varchar(20) comment '股票名称',
     trade_date            date comment '交易日期',
     macd                  decimal(16, 3) comment 'MACD值',
+    zd                    decimal(16, 2) comment '涨跌幅[%]',
     range_order           int comment '波段号',
-    first_find_point_date date comment '首个发现点日期',
-    find_point_date       date comment '发现点日期',
+    find_point_date date comment '发现点日期',
     start_point_date      date comment '起点日期',
-    peek_point_date       date comment '峰点日期',
     end_point_date        date comment '止点日期',
     will                  varchar(10) comment '趋势意向：上涨、下跌',
 
-    create_by             varchar(64) default '' null comment '创建者',
-    create_time           datetime               null comment '创建时间',
-    update_by             varchar(64) default '' null comment '更新者',
-    update_time           datetime               null comment '更新时间',
-    remark                varchar(500)           null comment '备注'
+    create_by             varchar(64) default 'sys'                                         null comment '创建者',
+    create_time           datetime    default current_timestamp                             null comment '创建时间',
+    update_by             varchar(64) default 'sys'                                         null comment '更新者',
+    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark                varchar(500)                                                      null comment '备注'
 ) comment '股票MACD分析';
 create unique index idx_stock_macd_analyze on stock_macd_analyze (stock_code, trade_date);
 create index idx_stock_macd_analyze_date on stock_macd_analyze (trade_date);
