@@ -100,6 +100,9 @@ create table stock_trade_day
     id            int primary key auto_increment comment '主键id',
     trade_day     date comment '交易日期'
 );
+create unique index idx_stock_trade_day on stock_trade_day (trade_day);
+
+
 
 -- 股票分时交易:dn(日线未复权)
 create table stock_trade_dn
@@ -194,6 +197,7 @@ create table stock_macd_analyze
     find_point_date date comment '发现点日期',
     start_point_date      date comment '起点日期',
     end_point_date        date comment '止点日期',
+    sum_zd         decimal(16, 2)  comment '波段总涨跌幅[%]',
     will                  varchar(10) comment '趋势意向：上涨、下跌',
 
     create_by             varchar(64) default 'sys'                                         null comment '创建者',

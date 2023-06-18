@@ -1,43 +1,70 @@
+-- 上涨数据
+select sma.stock_code,
+       sma.stock_name,
+       sma.trade_date,
+       sma.macd,
+       sma.zd,
+       sma.range_order,
+       sma.find_point_date,
+       sma.start_point_date,
+       sma.end_point_date,
+       sma.will,
+       sbi.industry_name
+from stock_macd_analyze sma,
+     stock_trade_dn std
+    left join stock_base_info sbi on std.stock_code = sbi.stock_code
+where 1 = 1
+  and std.stock_code = sma.stock_code
+  and std.trade_date = sma.trade_date
+  and std.trade_num >= 80000
+  and std.close_price >= 10
 
--- macd < -0.1  、 macd >= -0.1
-select stock.stock_code,
-       stock.stock_name,
-       macd1.trade_date as 1Date,
-       macd1.macd         as 1Macd,
-       macd2.macd         as 2Macd,
-       macd2.trade_date as 2Date,
-       stock.industry_name
-from stock_macd_dn macd1,
-     stock_macd_dn macd2,
-     stock_base_info stock,
-     stock_trade_dn trade
-where macd1.stock_code = macd2.stock_code
-  and macd1.stock_code = stock.stock_code
-  and stock.turnover_gt_8w = '是'
-
-  and macd1.stock_code = trade.stock_code
-  and trade.trade_date = get_trade_day(current_date, -1)
-  and trade.close_price >= 10
-
-  and macd1.trade_date = get_trade_day(current_date, -1)
-  and macd2.trade_date = get_trade_day(current_date, 0)
-  and macd1.macd < -0.1
-  and macd2.macd >= -0.1
-order by stock.industry_name
+  and sma.will = '上涨'
+#   and sma.start_point_date >= date'2023-06-09'
+  and sma.find_point_date >= get_trade_day(current_date, -1)
+  and sma.trade_date = get_trade_day(current_date, 0)
+order by industry_name
 ;
 
 
-select smd.id,
-       smd.stock_code,
-       smd.stock_name,
-       smd.trade_date,
-       smd.diff,
-       smd.dea,
-       smd.macd,
-       std.zd
-from stock_macd_dn smd
-         left join stock_trade_dn std on smd.stock_code = std.stock_code and smd.trade_date = std.trade_date
+-- 各个阶段总收益
+select sma.stock_code,
+       sma.stock_name,
+       sma.trade_date,
+       sma.macd,
+       sma.zd,
+       sma.range_order,
+       sma.find_point_date,
+       sma.start_point_date,
+       sma.end_point_date,
+       sma.will
+from stock_macd_analyze sma
 where 1=1
-and smd.stock_code = '001324'
-order by smd.stock_code, smd.trade_date
+and end_point_date is not null
+;
+
+select sma.stock_code,
+       sma.stock_name,
+       sma.trade_date,
+       sma.macd,
+       sma.zd,
+       sma.range_order,
+       sma.find_point_date,
+       sma.start_point_date,
+       sma.end_point_date,
+       sma.will,
+       (trade2.close_price - trade1.close_price)/trade1.close_price as sumZd,
+       sbi.industry_name
+from stock_macd_analyze sma,
+     stock_trade_dn trade1,
+     stock_trade_dn trade2
+left join stock_base_info sbi on trade2.stock_code = sbi.stock_code
+where 1=1
+and sma.end_point_date is not null
+
+and trade1.stock_code = sma.stock_code
+and trade1.trade_date = sma.start_point_date
+and trade2.stock_code = sma.stock_code
+and trade2.trade_date = sma.end_point_date
+order by sumZd desc
 ;
