@@ -186,6 +186,10 @@ create table stock_macd_analyze
     stock_name            varchar(20) comment '股票名称',
     trade_date            date comment '交易日期',
     macd                  decimal(16, 3) comment 'MACD值',
+    zd                    decimal(16, 2)         null comment '涨跌幅[%]',
+    sum_zd                decimal(16, 2)         null comment '波段总涨跌幅[%]',
+    peek_sum_zd           decimal(16, 2)         null comment '波段peek涨跌幅[%]',
+
     range_order           int comment '波段号',
     first_find_point_date date comment '首个发现点日期',
     find_point_date       date comment '发现点日期',
