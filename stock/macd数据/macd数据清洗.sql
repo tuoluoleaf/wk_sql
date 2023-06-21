@@ -35,3 +35,22 @@ and trade1.trade_date = sma.start_point_date
 and trade2.stock_code = sma.stock_code
 and trade2.trade_date = sma.end_point_date
 ;
+
+
+-- 更新peek_sum_zd_seg
+
+select seg,
+       count(0) / 793144 * 100
+from (select floor(sma.peek_sum_zd / 1) as seg
+      from stock_macd_analyze sma
+      where sma.end_point_date is not null) tmp
+group by seg
+;
+
+
+
+
+select count(0)
+from stock_macd_analyze sma
+where sma.end_point_date is not null
+
