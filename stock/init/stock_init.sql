@@ -90,18 +90,17 @@ create table stock_daily_turnover
     id            int primary key auto_increment comment '主键id',
     stock_code    varchar(10) comment '股票代码',
     stock_name    varchar(20) comment '股票名称',
-    turnover        numeric(64) comment '成交量',
+    turnover      numeric(64) comment '成交量',
     business_date date comment '业务日期'
 ) comment '股票每日成交量';
 
 -- 交易日
 create table stock_trade_day
 (
-    id            int primary key auto_increment comment '主键id',
-    trade_day     date comment '交易日期'
+    id        int primary key auto_increment comment '主键id',
+    trade_day date comment '交易日期'
 );
 create unique index idx_stock_trade_day on stock_trade_day (trade_day);
-
 
 
 -- 股票分时交易:dn(日线未复权)
@@ -173,11 +172,11 @@ create table stock_macd_dn
     ema12       decimal(16, 4) comment 'EMA[12]值',
     ema26       decimal(16, 4) comment 'EMA[26]值',
 
-    create_by             varchar(64) default 'sys'                                         null comment '创建者',
-    create_time           datetime    default current_timestamp                             null comment '创建时间',
-    update_by             varchar(64) default 'sys'                                         null comment '更新者',
-    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark                varchar(500)                                                      null comment '备注'
+    create_by   varchar(64) default 'sys'                                         null comment '创建者',
+    create_time datetime    default current_timestamp                             null comment '创建时间',
+    update_by   varchar(64) default 'sys'                                         null comment '更新者',
+    update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark      varchar(500)                                                      null comment '备注'
 ) comment '股票MACD_日线未复权';
 create unique index idx_stock_macd_dn on stock_macd_dn (stock_code, trade_date);
 create index idx_stock_macd_dn_date on stock_macd_dn (trade_date);
@@ -187,32 +186,31 @@ create index idx_stock_macd_dn_date on stock_macd_dn (trade_date);
 # drop table  if exists stock_macd_analyze;
 create table stock_macd_analyze
 (
-    id                    bigint primary key auto_increment comment '主键id',
-    stock_code            varchar(10) comment '股票代码',
-    stock_name            varchar(20) comment '股票名称',
-    trade_date            date comment '交易日期',
-    macd                  decimal(16, 3) comment 'MACD值',
-    zd                    decimal(16, 2) comment '涨跌幅[%]',
-    sum_zd                decimal(16, 2)         null comment '波段总涨跌幅[%]',
-    peek_sum_zd           decimal(16, 2)         null comment '波段peek涨跌幅[%]',
+    id               bigint primary key auto_increment comment '主键id',
+    stock_code       varchar(10) comment '股票代码',
+    stock_name       varchar(20) comment '股票名称',
+    trade_date       date comment '交易日期',
+    macd             decimal(16, 3) comment 'MACD值',
+    zd               decimal(16, 2) comment '涨跌幅[%]',
+    sum_zd           decimal(16, 2)                                                    null comment '波段总涨跌幅[%]',
+    peek_sum_zd      decimal(16, 2)                                                    null comment '波段peek涨跌幅[%]',
+    peek_sum_zd_seg  int                                                               null comment '波段peek涨跌幅值分段',
 
-    range_order           int comment '波段号',
-    find_point_date date comment '发现点日期',
-    start_point_date      date comment '起点日期',
-    end_point_date        date comment '止点日期',
-    will                  varchar(10) comment '趋势意向：上涨、下跌',
 
-    create_by             varchar(64) default 'sys'                                         null comment '创建者',
-    create_time           datetime    default current_timestamp                             null comment '创建时间',
-    update_by             varchar(64) default 'sys'                                         null comment '更新者',
-    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark                varchar(500)                                                      null comment '备注'
+    range_order      int comment '波段号',
+    find_point_date  date comment '发现点日期',
+    start_point_date date comment '起点日期',
+    end_point_date   date comment '止点日期',
+    will             varchar(10) comment '趋势意向：上涨、下跌',
+
+    create_by        varchar(64) default 'sys'                                         null comment '创建者',
+    create_time      datetime    default current_timestamp                             null comment '创建时间',
+    update_by        varchar(64) default 'sys'                                         null comment '更新者',
+    update_time      datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark           varchar(500)                                                      null comment '备注'
 ) comment '股票MACD分析';
 create unique index idx_stock_macd_analyze on stock_macd_analyze (stock_code, trade_date);
 create index idx_stock_macd_analyze_date on stock_macd_analyze (trade_date);
-
-
-
 
 
 -- 工作日函数
@@ -226,7 +224,10 @@ BEGIN
     declare t_n date default base_date;
 
     select max(trade_day) into max_trade_day from stock_trade_day where trade_day <= base_date;
-    select trade_day into t_n from stock_trade_day where id = (select id from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
+    select trade_day
+    into t_n
+    from stock_trade_day
+    where id = (select id from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
 
     return t_n;
 end $$
