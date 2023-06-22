@@ -1,6 +1,6 @@
 
 
---  mac分析：波段
+--  macd分析：波段
 select sma.stock_code,
        sma.stock_name,
        sma.trade_date,
@@ -29,13 +29,16 @@ select sma.stock_code,
        sma.trade_date,
        sma.macd,
        sma.zd,
-       sma.sum_zd,
-       sma.peek_sum_zd,
+#        sma.sum_zd,
+#        sma.peek_sum_zd,
        sma.find_point_date,
        sma.start_point_date,
-       sma.end_point_date,
+#        sma.end_point_date,
        sma.will,
-       sbi.industry_name
+       sbi.industry_name,
+        ((select count(0) from stock_macd_analyze sma1 where sma1.stock_code = sma.stock_code and sma1.end_point_date is not null and sma1.peek_sum_zd >= 3)
+        /(select count(0) from stock_macd_analyze sma2 where sma2.stock_code = sma.stock_code and sma2.end_point_date is not null) ) as rate,
+    (select count(0) from stock_macd_analyze sma3 where sma3.stock_code = sma.stock_code and sma3.end_point_date is not null) as nums
 from stock_macd_analyze sma,
      stock_trade_dn std
          left join stock_base_info sbi on sbi.stock_code = std.stock_code
@@ -50,3 +53,6 @@ where 1 = 1
 
 order by sbi.industry_name
 ;
+
+
+

@@ -213,22 +213,28 @@ create unique index idx_stock_macd_analyze on stock_macd_analyze (stock_code, tr
 create index idx_stock_macd_analyze_date on stock_macd_analyze (trade_date);
 
 
--- 工作日函数
-DELIMITER $$
-create function get_trade_day(base_date date, n int) returns date
-    READS SQL DATA
-    DETERMINISTIC
-BEGIN
+-- 股票转红分析
+# drop table  if exists stock_trans_red_analyze;
+create table stock_trans_red_analyze
+(
+    id               bigint primary key auto_increment comment '主键id',
+    stock_code       varchar(10) comment '股票代码',
+    stock_name       varchar(20) comment '股票名称',
+    trade_date       date comment '交易日期',
+    macd             decimal(16, 3) comment 'MACD值',
+    zd               decimal(16, 2) comment '涨跌幅[%]',
+    sum_zd           decimal(16, 2)                                                    null comment '波段总涨跌幅[%]',
+    peek_sum_zd      decimal(16, 2)                                                    null comment '波段peek涨跌幅[%]',
+    start_point_date date comment '起点日期',
+    end_point_date   date comment '止点日期',
+    will             varchar(10) comment '趋势意向：上涨、下跌',
 
-    declare max_trade_day date default base_date;
-    declare t_n date default base_date;
+    create_by        varchar(64) default 'sys'                                         null comment '创建者',
+    create_time      datetime    default current_timestamp                             null comment '创建时间',
+    update_by        varchar(64) default 'sys'                                         null comment '更新者',
+    update_time      datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark           varchar(500)                                                      null comment '备注'
+) comment '股票转红分析';
+create unique index idx_stock_trans_red_analyze on stock_trans_red_analyze (stock_code, trade_date);
+create index idx_stock_trans_red_analyze_date on stock_trans_red_analyze (trade_date);
 
-    select max(trade_day) into max_trade_day from stock_trade_day where trade_day <= base_date;
-    select trade_day
-    into t_n
-    from stock_trade_day
-    where id = (select id from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
-
-    return t_n;
-end $$
-DELIMITER ;

@@ -149,7 +149,7 @@ select * from stock_base_info where turnover_gt_8w is null;
 
 
 
--- ----------------macd数据 成交信息 && MACD ----------
+-- ----------------清洗数据 成交信息 && MACD ----------
 select trade_date, count(0)
 from stock_macd_dn
 group by trade_date
