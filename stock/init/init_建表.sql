@@ -238,3 +238,35 @@ create table stock_trans_red_analyze
 create unique index idx_stock_trans_red_analyze on stock_trans_red_analyze (stock_code, trade_date);
 create index idx_stock_trans_red_analyze_date on stock_trans_red_analyze (trade_date);
 
+
+-- 选股数据
+drop table if exists stock_choice;
+create table stock_choice
+(
+    id                    bigint primary key auto_increment comment '主键id',
+    stock_code            varchar(10) comment '股票代码',
+    stock_name            varchar(20) comment '股票名称',
+    trade_date            date comment '交易日期',
+    analyze_source        varchar(10) comment '分析来源',
+    macd                  decimal(16, 3) comment 'MACD值',
+    zd                    decimal(16, 2) comment '涨跌幅[%]',
+    find_point_date       date comment '发现点日期',
+    start_point_date      date comment '起点日期',
+    will                  varchar(10) comment '趋势意向：上涨、下跌',
+    industry_name         varchar(10) comment '行业分类',
+    trade_num             decimal(16, 2)                                                    null comment '成交量[手]',
+    close_price           decimal(16, 2)                                                    null comment '收盘价[元]',
+    gt_three_percent_rate decimal(16, 4)                                                    null comment '大于[3%]收益的占比',
+    analyze_total_num     int                                                               null comment '当前股票分析区段数量',
+
+
+    create_by             varchar(64) default 'sys'                                         null comment '创建者',
+    create_time           datetime    default current_timestamp                             null comment '创建时间',
+    update_by             varchar(64) default 'sys'                                         null comment '更新者',
+    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark                varchar(500)                                                      null comment '备注'
+) comment '选股数据';
+create index idx_stock_choice on stock_choice (stock_code, trade_date);
+create index idx_stock_choice_date on stock_choice (trade_date);
+
+
