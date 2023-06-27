@@ -1,5 +1,17 @@
 
 
+-- 选股池
+select *
+from stock_choice
+where trade_date = get_trade_day(current_date, 0)
+order by industry_name, stock_code
+;
+
+
+
+
+
+
 -- 选股：转红分析 union all macd分析
 select stra.stock_code as stockCode,
        stra.stock_name as stockName,
@@ -59,5 +71,6 @@ where 1 = 1
 
 order by industryName
 ;
+
 
 

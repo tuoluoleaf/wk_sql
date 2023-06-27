@@ -240,7 +240,7 @@ create index idx_stock_trans_red_analyze_date on stock_trans_red_analyze (trade_
 
 
 -- 选股数据
-drop table if exists stock_choice;
+-- drop table if exists stock_choice;
 create table stock_choice
 (
     id                    bigint primary key auto_increment comment '主键id',
@@ -254,17 +254,18 @@ create table stock_choice
     start_point_date      date comment '起点日期',
     will                  varchar(10) comment '趋势意向：上涨、下跌',
     industry_name         varchar(10) comment '行业分类',
-    trade_num             decimal(16, 2)                                                    null comment '成交量[手]',
-    close_price           decimal(16, 2)                                                    null comment '收盘价[元]',
-    gt_three_percent_rate decimal(16, 4)                                                    null comment '大于[3%]收益的占比',
-    analyze_total_num     int                                                               null comment '当前股票分析区段数量',
+    trade_num             decimal(16, 2) null comment '成交量[手]',
+    close_price           decimal(16, 2) null comment '收盘价[元]',
+    gt_three_percent_rate decimal(16, 4) null comment '大于[3%]收益的占比',
+    analyze_total_num     int null comment '当前股票分析区段数量',
+    tags                  varchar(200) null comment '标签',
+    level                 varchar(10) null comment '等级:可选、已买',
 
-
-    create_by             varchar(64) default 'sys'                                         null comment '创建者',
-    create_time           datetime    default current_timestamp                             null comment '创建时间',
-    update_by             varchar(64) default 'sys'                                         null comment '更新者',
+    create_by             varchar(64) default 'sys' null comment '创建者',
+    create_time           datetime    default current_timestamp null comment '创建时间',
+    update_by             varchar(64) default 'sys' null comment '更新者',
     update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark                varchar(500)                                                      null comment '备注'
+    remark                varchar(500) null comment '备注'
 ) comment '选股数据';
 create index idx_stock_choice on stock_choice (stock_code, trade_date);
 create index idx_stock_choice_date on stock_choice (trade_date);
