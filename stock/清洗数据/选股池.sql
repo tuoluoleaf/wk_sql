@@ -1,6 +1,10 @@
+
+-- 选股池数据
 insert into stock_choice
 (stock_code, stock_name, trade_date, analyze_source, macd, zd, find_point_date, start_point_date, will, industry_name, trade_num,
  close_price, gt_three_percent_rate, analyze_total_num)
+
+
 select stockCode,
        stockName,
        tradeDate,
@@ -44,6 +48,7 @@ from (select stra.stock_code                          as stockCode,
         and std.trade_date = stra.trade_date
         and std.trade_num >= 80000
         and std.close_price >= 10
+
       union all
       select sma.stock_code                                                                                                            as stockCode,
              sma.stock_name                                                                                                            as stockName,
@@ -71,5 +76,22 @@ from (select stra.stock_code                          as stockCode,
         and std.trade_date = sma.trade_date
         and std.trade_num >= 80000
         and std.close_price >= 10
+
       order by industryName) tmp
 order by industryName
+;
+
+
+-- 选股池：筛选数据
+update stock_choice_filter
+set stock_code    = replace(replace(trim(stock_code), '\r', ''), ' ', ''),
+    stock_name    = replace(replace(replace(trim(stock_name), '\r', ''), ' ', ''), '-U', '')
+;
+
+
+-- 选股筛选数据：入选股池：选股等级
+update stock_choice sc
+set sc.level = '可选'
+where sc.stock_code in (select stock_code from stock_choice_filter scf where scf.trade_date = get_trade_day(current_date, -1))
+and sc.trade_date = get_trade_day(current_date, -1)
+;

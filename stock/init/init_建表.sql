@@ -271,3 +271,12 @@ create index idx_stock_choice on stock_choice (stock_code, trade_date);
 create index idx_stock_choice_date on stock_choice (trade_date);
 
 
+create table stock_choice_filter
+(
+    id         bigint primary key auto_increment comment '主键id',
+    stock_code varchar(10) comment '股票代码',
+    stock_name varchar(20) comment '股票名称',
+    trade_date date comment '交易日期'
+) comment '选股池筛选';
+create index idx_stock_choice_filter on stock_choice_filter (stock_code, trade_date);
+create index idx_stock_choice_filter_date on stock_choice_filter (trade_date);
