@@ -271,6 +271,7 @@ create index idx_stock_choice on stock_choice (stock_code, trade_date);
 create index idx_stock_choice_date on stock_choice (trade_date);
 
 
+-- 选股池：中间处理表
 create table stock_choice_filter
 (
     id         bigint primary key auto_increment comment '主键id',
