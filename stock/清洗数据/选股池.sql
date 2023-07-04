@@ -1,10 +1,5 @@
 
 -- 选股池数据
-insert into stock_choice
-(stock_code, stock_name, trade_date, analyze_source, macd, zd, find_point_date, start_point_date, will, industry_name, trade_num,
- close_price, gt_three_percent_rate, analyze_total_num)
-
-
 select stockCode,
        stockName,
        tradeDate,
@@ -18,6 +13,7 @@ select stockCode,
        tradeNum,
        closePrice,
        gtThreePercentNum/analyzetotalNum as gtThreePercentRate,
+       gtThreePercentNum,
        analyzetotalNum
 from (select stra.stock_code                          as stockCode,
              stra.stock_name                          as stockName,
@@ -32,18 +28,26 @@ from (select stra.stock_code                          as stockCode,
              std.trade_num                            as tradeNum,
              std.close_price                          as closePrice,
              (select count(0)
-              from stock_trans_red_analyze stra1
+              from stock_trans_red_analyze stra1,
+                   stock_macd_dn smd1
               where stra1.stock_code = stra.stock_code
                 and stra1.end_point_date is not null
-                and stra1.peek_sum_zd >= 3)           as gtThreePercentNum,
+                and stra1.peek_sum_zd >= 3
+                and smd1.stock_code = stra1.stock_code
+                and smd1.trade_date = stra1.start_point_date
+                and smd1.macd <= 0.2)           as gtThreePercentNum,
              (select count(0)
-              from stock_trans_red_analyze stra3
-              where stra3.stock_code = stra.stock_code
-                and stra3.end_point_date is not null) as analyzetotalNum
+              from stock_trans_red_analyze stra2,
+                   stock_macd_dn smd2
+              where stra2.stock_code = stra.stock_code
+                and stra2.end_point_date is not null
+                and smd2.stock_code = stra2.stock_code
+                and smd2.trade_date = stra2.start_point_date
+                and smd2.macd <= 0.2) as analyzetotalNum
       from stock_trans_red_analyze stra,
            stock_trade_dn std
                left join stock_base_info sbi on sbi.stock_code = std.stock_code
-      where stra.start_point_date = get_trade_day(current_date, 0)
+      where stra.start_point_date = get_trade_day(current_date, -1)
         and std.stock_code = stra.stock_code
         and std.trade_date = stra.trade_date
         and std.trade_num >= 80000
@@ -63,15 +67,26 @@ from (select stra.stock_code                          as stockCode,
              std.trade_num                                                                                                             as tradeNum,
              std.close_price                                                                                                           as closePrice,
              (select count(0)
-              from stock_macd_analyze sma1
+              from stock_macd_analyze sma1,
+                   stock_macd_dn smd1
               where sma1.stock_code = sma.stock_code
                 and sma1.end_point_date is not null
-                and sma1.peek_sum_zd >= 3)   as gtThreePercentNum,
-             (select count(0) from stock_macd_analyze sma3 where sma3.stock_code = sma.stock_code and sma3.end_point_date is not null) as analyzetotalNum
+                and sma1.peek_sum_zd >= 3
+                and smd1.stock_code = sma1.stock_code
+                and smd1.trade_date = sma1.start_point_date
+                and smd1.macd <= 0.2)   as gtThreePercentNum,
+             (select count(0)
+              from stock_macd_analyze sma2,
+                   stock_macd_dn smd2
+              where sma2.stock_code = sma.stock_code
+                and sma2.end_point_date is not null
+                and smd2.stock_code = sma2.stock_code
+                and smd2.trade_date = sma2.start_point_date
+                and smd2.macd <= 0.2) as analyzetotalNum
       from stock_macd_analyze sma,
            stock_trade_dn std
                left join stock_base_info sbi on sbi.stock_code = std.stock_code
-      where sma.start_point_date = get_trade_day(current_date, 0)
+      where sma.start_point_date = get_trade_day(current_date, -1)
         and std.stock_code = sma.stock_code
         and std.trade_date = sma.trade_date
         and std.trade_num >= 80000
