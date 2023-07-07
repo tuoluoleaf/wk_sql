@@ -270,14 +270,20 @@ create table stock_choice
 create index idx_stock_choice on stock_choice (stock_code, trade_date);
 create index idx_stock_choice_date on stock_choice (trade_date);
 
-
--- 选股池：中间处理表
-create table stock_choice_filter
+-- 选股基线
+create table stock_choice_baseline
 (
-    id         bigint primary key auto_increment comment '主键id',
-    stock_code varchar(10) comment '股票代码',
-    stock_name varchar(20) comment '股票名称',
-    trade_date date comment '交易日期'
-) comment '选股池筛选';
-create index idx_stock_choice_filter on stock_choice_filter (stock_code, trade_date);
-create index idx_stock_choice_filter_date on stock_choice_filter (trade_date);
+    id          int primary key auto_increment comment '主键id',
+    stock_code  varchar(10) comment '股票代码',
+    macd        decimal(16, 3) comment 'MACD值',
+    zd          decimal(16, 2) comment '涨跌幅[%]',
+    arise_num   int comment '出现次数',
+
+    create_by   varchar(64) default 'sys'                                         null comment '创建者',
+    create_time datetime    default current_timestamp                             null comment '创建时间',
+    update_by   varchar(64) default 'sys'                                         null comment '更新者',
+    update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark      varchar(500)                                                      null comment '备注'
+) comment '选股基线';
+create unique index idx_stock_choice_baseline on stock_choice_baseline (stock_code);
+
