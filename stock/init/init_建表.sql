@@ -270,13 +270,19 @@ create table stock_choice
 create index idx_stock_choice on stock_choice (stock_code, trade_date);
 create index idx_stock_choice_date on stock_choice (trade_date);
 
+
+
 -- 选股基线
 create table stock_choice_baseline
 (
     id          int primary key auto_increment comment '主键id',
     stock_code  varchar(10) comment '股票代码',
-    macd        decimal(16, 3) comment 'MACD值',
-    zd          decimal(16, 2) comment '涨跌幅[%]',
+    avg_macd        decimal(16, 3) comment 'avg_MACD值',
+    max_macd        decimal(16, 3) comment 'max_MACD值',
+    min_macd        decimal(16, 3) comment 'min_MACD值',
+    avg_zd          decimal(16, 2) comment 'avg_涨跌幅[%]',
+    max_zd          decimal(16, 2) comment 'max_涨跌幅[%]',
+    min_zd          decimal(16, 2) comment 'min_涨跌幅[%]',
     arise_num   int comment '出现次数',
 
     create_by   varchar(64) default 'sys'                                         null comment '创建者',
@@ -286,4 +292,29 @@ create table stock_choice_baseline
     remark      varchar(500)                                                      null comment '备注'
 ) comment '选股基线';
 create unique index idx_stock_choice_baseline on stock_choice_baseline (stock_code);
+
+-- 选股基线：盈亏比：成功率
+create table stock_choice_baseline_rate
+(
+    id            int auto_increment comment '主键id'
+        primary key,
+    stock_code    varchar(10)                           null comment '股票代码',
+    stock_name    varchar(20)                           null comment '股票名称',
+    industry_name varchar(20)                           null comment '行业',
+    base_macd     decimal(16, 3)                        null comment 'base_MACD值',
+    base_zd       decimal(16, 2)                        null comment 'base_涨跌幅[%]',
+    up_sum        decimal(16, 2)                        null comment '盈利总幅度[%]',
+    down_sum      decimal(16, 2)                        null comment '亏损总幅度[%]',
+    all_sum       decimal(16, 2)                        null comment '盈亏总幅度[%]',
+    up_num        int                                   null comment '盈利次数',
+    down_num      int                                   null comment '亏损次数',
+
+    create_by     varchar(64) default 'sys'             null comment '创建者',
+    create_time   datetime    default CURRENT_TIMESTAMP null comment '创建时间',
+    update_by     varchar(64) default 'sys'             null comment '更新者',
+    update_time   datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    remark        varchar(500)                          null comment '备注'
+) comment '选股基线rate';
+create unique index idx_stock_choice_baseline_rate on stock_choice_baseline_rate (stock_code);
+
 
