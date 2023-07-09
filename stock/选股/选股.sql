@@ -31,116 +31,44 @@ order by sc.industry_name, sc.stock_code
 ;
 
 
-select 'macd分析';
--- macd分析
-with tmp as (select std1.zd + std2.zd as t_sum,
-                    std1.zd           as t_1,
-                    std2.zd           as t_2,
-                    sbi.industry_name,
-                    sma.*
-             from stock_macd_analyze sma
-                      left join stock_trade_dn std
-                                on std.stock_code = sma.stock_code and std.trade_date = sma.trade_date
-                      left join stock_base_info sbi on sbi.stock_code = sma.stock_code
-                      left join stock_trade_dn std1 on std1.stock_code = sma.stock_code and
-                                                       std1.trade_date = get_trade_day(sma.trade_date, 1)
-                      left join stock_trade_dn std2 on std2.stock_code = sma.stock_code and
-                                                       std2.trade_date = get_trade_day(sma.trade_date, 2)
-             where sma.trade_date = get_trade_day(current_date, -1)
-#                and sma.start_point_date = sma.trade_date
-               and sma.find_point_date = sma.trade_date
-               and std.trade_num >= 80000
-               and std.close_price >= 10
-#                and sma.macd <= 0.2
-#                and sma.zd <= 5
-               and start_point_date is not null)
-
-select industry_name,
-       count(industry_name),
-       avg(t_1),
-       avg(t_2)
-from tmp
-group by industry_name
+select * from stock_trans_red_analyze
+where trade_date = start_point_date
+and trade_date = get_trade_day(current_date, 0)
 ;
 
+-- 基线: zd >=5：盈亏比、成功率
+select stra.stock_code,
+       stra.stock_name,
+       scbr.industry_name,
+       stra.trade_date,
+       stra.macd,
+       stra.zd,
+       scbr.base_macd,
+       scbr.base_zd,
+       scbr.up_sum,
+       scbr.down_sum,
+       scbr.all_sum,
+       scbr.up_num,
+       scbr.down_num,
+       scb.avg_macd,
+       scb.max_macd,
+       scb.min_macd,
+       scb.avg_zd,
+       scb.max_zd,
+       scb.min_zd
+from stock_trans_red_analyze stra,
+     stock_choice_baseline_rate scbr,
+     stock_choice_baseline scb,
+     stock_trade_dn std
+where stra.trade_date = stra.start_point_date
+  and stra.trade_date = get_trade_day(current_date, 0)
 
-select '转红分析';
--- 转红分析
-with tmp as (select stra1.zd + stra2.zd as t_sum,
-                    stra1.zd           as t_1,
-                    stra2.zd           as t_2,
-                    sbi.industry_name,
-                    stra.*
-             from stock_trans_red_analyze stra
-                      left join  stock_base_info sbi on sbi.stock_code = stra.stock_code
-                      left join stock_trade_dn std on std.stock_code = stra.stock_code and std.trade_date = stra.trade_date
-                      left join stock_trans_red_analyze stra1 on stra1.stock_code = stra.stock_code and
-                                                       stra1.trade_date = get_trade_day(stra.trade_date, 1)
-                      left join stock_trans_red_analyze stra2 on stra2.stock_code = stra.stock_code and
-                                                       stra2.trade_date = get_trade_day(stra.trade_date, 2)
-             where stra.trade_date = get_trade_day(current_date, -2)
-               and stra.start_point_date = stra.trade_date
-               and std.trade_num >= 80000
-               and std.close_price >= 10
-               and stra.macd <= 0.2
-               and stra.zd <= 5
-               )
+  and std.stock_code = stra.stock_code
+  and std.trade_date = stra.trade_date
+  and std.close_price >= 10
+  and std.trade_num >= 80000
 
-# select industry_name,
-#        count(industry_name),
-#        avg(t_1),
-#        avg(t_2)
-# from tmp
-# group by industry_name
-# ;
-
-# select macd,
-#        count(macd),
-#        avg(t_1),
-#        avg(t_2)
-# from tmp
-# group by macd
-# ;
-
-select zd,
-       count(zd),
-       avg(t_1),
-       avg(t_2)
-from tmp
-group by zd
-;
-
-
-
-select '红九转';
--- 红九转
-select stra1.zd + stra2.zd + stra3.zd as t_sum,
-       stra1.zd            as t_1,
-       stra2.zd            as t_2,
-       stra3.zd            as t_3,
-       sbi.industry_name,
-       smd.macd,
-       std.zd,
-       mnt.*
-from magical_nine_turn mnt
-         left join stock_base_info sbi on sbi.stock_code = mnt.stock_code
-         left join stock_macd_dn smd on smd.stock_code = mnt.stock_code and smd.trade_date = mnt.signal_date
-         left join stock_trade_dn std on std.stock_code = mnt.stock_code and std.trade_date = mnt.signal_date
-         left join stock_trans_red_analyze stra1 on stra1.stock_code = mnt.stock_code and
-                                                    stra1.trade_date = get_trade_day(mnt.signal_date, 1)
-         left join stock_trans_red_analyze stra2 on stra2.stock_code = mnt.stock_code and
-                                                    stra2.trade_date = get_trade_day(mnt.signal_date, 2)
-         left join stock_trans_red_analyze stra3 on stra3.stock_code = mnt.stock_code and
-                                                    stra3.trade_date = get_trade_day(mnt.signal_date, 3)
-where mnt.turn_type = '红九转'
-  and mnt.signal_date = date'2023-06-13'
-
-
-
-
-
-
-
-
-
-
+  and scb.stock_code = stra.stock_code
+  and scbr.stock_code = stra.stock_code
+  and stra.zd >= scbr.base_zd
+  and stra.macd >= scbr.base_macd

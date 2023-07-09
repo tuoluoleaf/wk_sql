@@ -87,5 +87,3 @@ from up_trans,
     left join stock_choice_baseline snb on sbi.stock_code = snb.stock_code
 where up_trans.stock_code = down_trans.stock_code
 ;
-
-truncate
