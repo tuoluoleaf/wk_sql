@@ -1,5 +1,5 @@
 
-
+select '转红分析：波段';
 --  转红分析：波段
 select stra.stock_code,
        stra.stock_name,
@@ -22,6 +22,7 @@ order by stra.trade_date desc
 
 
 
+select '转红：选股';
 -- 转红：选股
 select stra.stock_code,
        stra.stock_name,
@@ -50,4 +51,62 @@ where 1 = 1
 
 order by sbi.industry_name
 ;
+
+
+select '转红：[T日收盘价 >= T-3日收盘价]：统计';
+-- 转红：[T日收盘价 >= T-3日收盘价]：统计
+with t1 as (select stra.stock_code,
+                   stra.stock_name,
+                   stra.trade_date,
+                   stra.macd,
+                   stra.zd,
+                   stra.sum_zd,
+                   stra.peek_sum_zd,
+                   stra.start_point_date,
+                   stra.end_point_date
+            from stock_trans_red_analyze stra,
+                 stock_trade_dn std1,
+                 stock_trade_dn std2
+            where 1 = 1
+              and stra.end_point_date is not null
+#               and stra.stock_code = '605118'
+              and stra.stock_name = '中文传媒'
+              and stra.start_point_date >= date'2020-01-01'
+
+              and std1.stock_code = stra.stock_code
+              and std1.trade_date = get_trade_day(stra.start_point_date, -3)
+              and std2.stock_code = stra.stock_code
+              and std2.trade_date = stra.start_point_date
+              and std1.close_price <= std2.close_price),
+
+     upSumZd as (select stock_code,
+                        count(sum_zd) as countNun,
+                        avg(sum_zd)   as avg
+                 from t1
+                 where sum_zd >= 0
+                 group by stock_code),
+     downSumZd as (select stock_code,
+                          count(sum_zd) as countNun,
+                          avg(sum_zd)   as avg
+                   from t1
+                   where sum_zd < 0
+                   group by stock_code)
+
+
+select sbi.stock_code,
+       sbi.stock_name,
+       upSumZd.countNun as upCountNum,
+       upSumZd.avg as upAvg,
+       downSumZd.countNun as downCountNum,
+       downSumZd.avg as downAvg,
+       (upSumZd.countNun*upSumZd.avg + downSumZd.countNun*downSumZd.avg) / (upSumZd.countNun + downSumZd.countNun)
+from stock_base_info sbi,
+     upSumZd,
+     downSumZd
+where sbi.stock_code = upSumZd.stock_code
+and sbi.stock_code = downSumZd.stock_code
+
+;
+
+
 
