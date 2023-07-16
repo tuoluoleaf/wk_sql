@@ -60,7 +60,7 @@ from stock_trans_red_analyze stra,
          left join stock_trade_dn std4
                    on std4.stock_code = std2.stock_code and std4.trade_date = get_trade_day(std2.trade_date, 2)
 where 1 = 1
-  and stra.trade_date = get_trade_day(current_date, -2)
+  and stra.trade_date = date${date}
   and stra.start_point_date = stra.trade_date
 
   and sbi.stock_code = stra.stock_code
@@ -75,7 +75,6 @@ where 1 = 1
   and std2.trade_num >= 50000
 order by sbi.industry_name
 ;
-
 
 
 
