@@ -318,3 +318,24 @@ create table stock_choice_baseline_rate
 create unique index idx_stock_choice_baseline_rate on stock_choice_baseline_rate (stock_code);
 
 
+-- 领涨股票
+create table stock_lead_up
+(
+    id            int auto_increment comment '主键id'
+        primary key,
+    stock_code    varchar(10)                           null comment '股票代码',
+    stock_name    varchar(20)                           null comment '股票名称',
+    industry_name varchar(20)                           null comment '行业',
+    nums          int                                   null comment '领涨次数',
+    pj            int                                   null comment '平均涨跌幅度[%]',
+    order_num     int                                   null comment '排序',
+
+    create_by     varchar(64) default 'sys'             null comment '创建者',
+    create_time   datetime    default CURRENT_TIMESTAMP null comment '创建时间',
+    update_by     varchar(64) default 'sys'             null comment '更新者',
+    update_time   datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    remark        varchar(500)                          null comment '备注'
+) comment '领涨股票';
+create unique index idx_stock_lead_up on stock_lead_up (stock_code);
+drop table stock_lead_up;
+
