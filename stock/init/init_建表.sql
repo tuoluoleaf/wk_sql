@@ -339,3 +339,32 @@ create table stock_lead_up
 create unique index idx_stock_lead_up on stock_lead_up (stock_code);
 drop table stock_lead_up;
 
+
+
+
+-- 股票MA
+create table stock_ma_dn
+(
+    id          bigint primary key auto_increment comment '主键id',
+    stock_code  varchar(10) comment '股票代码',
+    stock_name  varchar(20) comment '股票名称',
+    trade_date  date comment '交易日期',
+    ma3        decimal(16, 3) comment 'ma3',
+    ma5        decimal(16, 3) comment 'ma5',
+    ma10        decimal(16, 3) comment 'maa10',
+    ma15        decimal(16, 3) comment 'ma15',
+    ma20        decimal(16, 3) comment 'ma20',
+    ma30        decimal(16, 3) comment 'ma30',
+    ma60        decimal(16, 3) comment 'ma60',
+    ma120        decimal(16, 3) comment 'ma120',
+    ma200        decimal(16, 3) comment 'ma200',
+    ma250        decimal(16, 3) comment 'ma250',
+
+    create_by   varchar(64) default 'sys'                                         null comment '创建者',
+    create_time datetime    default current_timestamp                             null comment '创建时间',
+    update_by   varchar(64) default 'sys'                                         null comment '更新者',
+    update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark      varchar(500)                                                      null comment '备注'
+) comment '股票MA';
+create unique index idx_stock_ma_dn on stock_ma_dn (stock_code, trade_date);
+create index idx_stock_ma_dn_date on stock_ma_dn (trade_date);
