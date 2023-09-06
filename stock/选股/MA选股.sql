@@ -12,16 +12,15 @@ select smdCurrent.stock_code,
         from stock_trade_dn t
         where smdCurrent.stock_code = t.stock_code
           and t.trade_date >= get_trade_day(smdCurrent.trade_date, 1)
-          and t.trade_date <= get_trade_day(smdCurrent.trade_date, 5)
-        ) as sumZd,
+          and t.trade_date <= get_trade_day(smdCurrent.trade_date, 5)) as sumZd,
        std.close_price,
-       std.trade_num / 10000 as trade_num,
+       std.trade_num / 10000                                           as trade_num,
        smdCurrent.ma5,
        smdCurrent.ma10,
        smdCurrent.ma20,
-       smdBefore.ma5         as ma5B,
-       smdBefore.ma10        as ma10B,
-       smdBefore.ma20        as ma20B
+       smdBefore.ma5                                                   as ma5B,
+       smdBefore.ma10                                                  as ma10B,
+       smdBefore.ma20                                                  as ma20B
 from stock_ma_dn smdCurrent,
      stock_ma_dn smdBefore,
      stock_base_info sbi,
@@ -63,16 +62,15 @@ select smdCurrent.stock_code,
         from stock_trade_dn t
         where smdCurrent.stock_code = t.stock_code
           and t.trade_date >= get_trade_day(smdCurrent.trade_date, 1)
-          and t.trade_date <= get_trade_day(smdCurrent.trade_date, 5)
-        )                    as sumZd,
+          and t.trade_date <= get_trade_day(smdCurrent.trade_date, 5)) as sumZd,
        std.close_price,
-       std.trade_num / 10000 as trade_num,
+       std.trade_num / 10000                                           as trade_num,
        smdCurrent.ma5,
        smdCurrent.ma10,
        smdCurrent.ma20,
-       smdBefore.ma5         as ma5B,
-       smdBefore.ma10        as ma10B,
-       smdBefore.ma20        as ma20B
+       smdBefore.ma5                                                   as ma5B,
+       smdBefore.ma10                                                  as ma10B,
+       smdBefore.ma20                                                  as ma20B
 from stock_ma_dn smdCurrent,
      stock_ma_dn smdBefore,
      stock_base_info sbi,
@@ -122,6 +120,7 @@ select smdCurrent.stock_code,
        smdCurrent.ma10,
        smdCurrent.ma20
 from stock_ma_dn smdCurrent,
+     stock_ma_dn smdBefore,
      stock_base_info sbi,
      stock_trade_dn stdCurrent
          left join stock_ma_dn smdAfter on smdAfter.stock_code = stdCurrent.stock_code and
@@ -129,11 +128,14 @@ from stock_ma_dn smdCurrent,
          left join stock_trade_dn stdAfter on stdAfter.stock_code = stdCurrent.stock_code and
                                               stdAfter.trade_date = get_trade_day(stdCurrent.trade_date, 1)
 where 1 = 1
-  and smdCurrent.trade_date = get_trade_day(current_date, -2)
+  and smdCurrent.trade_date = get_trade_day(current_date, -6)
 #   and smd.trade_date = date'2023-06-15'
+  and smdBefore.stock_code = smdCurrent.stock_code
+  and smdBefore.trade_date = get_trade_day(smdCurrent.trade_date, -1)
   and smdCurrent.ma5 >= smdCurrent.ma20
   and smdCurrent.ma20 >= smdCurrent.ma10
-
+  and smdBefore.ma20 >= smdBefore.ma5
+  and smdBefore.ma5 >= smdBefore.ma10
 
   and sbi.stock_code = smdCurrent.stock_code
   and stdCurrent.stock_code = smdCurrent.stock_code
