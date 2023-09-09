@@ -1,8 +1,3 @@
-# drop table if exists stock_base_info ;
-drop table if exists industry_category;
-drop table if exists main_force_secret;
-drop table if exists magical_nine_turn;
-
 -- 股票基本信息：stock_base_info
 create table stock_base_info
 (
@@ -19,7 +14,6 @@ create table stock_base_info
     update_time    datetime               null comment '更新时间',
     remark         varchar(500)           null comment '备注'
 ) comment '股票基本信息';
-
 create unique index idx_stock_base_info on stock_base_info (stock_code);
 
 
@@ -35,64 +29,6 @@ create table industry_category
     update_time   timestamp comment '更新时间',
     update_user   varchar(20) comment '更新人'
 ) comment '行业分类';
-
-
--- 主力密码：main_force_secret
-create table main_force_secret
-(
-    id                 int primary key auto_increment comment '主键id',
-    stock_code         varchar(10) comment '股票代码',
-    stock_name         varchar(20) comment '股票名称',
-    monitor_date       date comment '监控日期',
-    will               varchar(10) comment '主力意向',
-    float_profit_ratio numeric(16, 4) comment '主力浮盈率',
-    entrance_energy    numeric(16, 4) comment '主力入场动能（万）',
-    control_degree     numeric(16, 4) comment '主力控盘度',
-
-    create_time        timestamp default current_timestamp comment '创建时间',
-    create_user        varchar(20) comment '创建人',
-    update_time        timestamp comment '更新时间',
-    update_user        varchar(20) comment '更新人'
-) comment '主力密码';
-
-
--- 神奇九转：magical_nine_turn
-create table magical_nine_turn
-(
-    id                   int primary key auto_increment comment '主键id',
-    stock_code           varchar(10) comment '股票代码',
-    stock_name           varchar(20) comment '股票名称',
-    signal_date          date comment '信号日期',
-    pre_nine_sum_change  numeric(16, 4) comment '前9日累计涨跌',
-    post_four_sum_change numeric(16, 4) comment '后4日区间盈亏',
-    hit_rate             numeric(16, 4) comment '后4日区间盈亏',
-    turn_type            varchar(10) comment '九转类型：红九转、绿九转',
-
-    create_time          timestamp default current_timestamp comment '创建时间',
-    create_user          varchar(20) comment '创建人',
-    update_time          timestamp comment '更新时间',
-    update_user          varchar(20) comment '更新人'
-) comment '神奇九转';
-
-
--- stock_industry_tmp：股票行业中间表
-create table stock_industry_tmp
-(
-    id            int primary key auto_increment comment '主键id',
-    stock_code    varchar(10) comment '股票代码',
-    stock_name    varchar(20) comment '股票名称',
-    industry_name varchar(20) comment '行业名称'
-);
-
--- 股票每日成交量
-create table stock_daily_turnover
-(
-    id            int primary key auto_increment comment '主键id',
-    stock_code    varchar(10) comment '股票代码',
-    stock_name    varchar(20) comment '股票名称',
-    turnover      numeric(64) comment '成交量',
-    business_date date comment '业务日期'
-) comment '股票每日成交量';
 
 -- 交易日
 create table stock_trade_day
@@ -131,34 +67,6 @@ create unique index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date
 create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
 
 
--- 股票分时交易:dn(日线未复权):2015之前分表
-create table stock_trade_dn_2015
-(
-    id            bigint primary key auto_increment comment '主键id',
-    stock_code    varchar(10) comment '股票代码',
-    stock_name    varchar(20) comment '股票名称',
-    trade_date    date comment '交易日期',
-    open_price    decimal(16, 2) comment '开盘价[元]',
-    close_price   decimal(16, 2) comment '收盘价[元]',
-    highest_price decimal(16, 2) comment '最高价[元]',
-    lowest_price  decimal(16, 2) comment '最低价[元]',
-    trade_num     decimal(16, 2) comment '成交量[手]',
-    trade_money   decimal(16, 2) comment '成交额[元]',
-    zf            decimal(16, 2) comment '振幅[%]',
-    hs            decimal(16, 2) comment '换手率[%]',
-    zd            decimal(16, 2) comment '涨跌幅[%]',
-    zde           decimal(16, 2) comment '涨跌额[元]',
-
-    create_by     varchar(64) default 'sys'                                         null comment '创建者',
-    create_time   datetime    default current_timestamp                             null comment '创建时间',
-    update_by     varchar(64) default 'sys'                                         null comment '更新者',
-    update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark        varchar(500)                                                      null comment '备注'
-) comment '股票交易_日线未复权_2015之前';
-create unique index idx_stock_trade_dn_2015 on stock_trade_dn_2015 (stock_code, trade_date);
-create index idx_stock_trade_dn_2015_date on stock_trade_dn_2015 (trade_date);
-
-
 -- 股票MACD:dn(日线未复权)
 create table stock_macd_dn
 (
@@ -182,189 +90,56 @@ create unique index idx_stock_macd_dn on stock_macd_dn (stock_code, trade_date);
 create index idx_stock_macd_dn_date on stock_macd_dn (trade_date);
 
 
--- 股票MACD分析
-# drop table  if exists stock_macd_analyze;
-create table stock_macd_analyze
-(
-    id               bigint primary key auto_increment comment '主键id',
-    stock_code       varchar(10) comment '股票代码',
-    stock_name       varchar(20) comment '股票名称',
-    trade_date       date comment '交易日期',
-    macd             decimal(16, 3) comment 'MACD值',
-    zd               decimal(16, 2) comment '涨跌幅[%]',
-    sum_zd           decimal(16, 2)                                                    null comment '波段总涨跌幅[%]',
-    peek_sum_zd      decimal(16, 2)                                                    null comment '波段peek涨跌幅[%]',
-    peek_sum_zd_seg  int                                                               null comment '波段peek涨跌幅值分段',
-
-
-    range_order      int comment '波段号',
-    find_point_date  date comment '发现点日期',
-    start_point_date date comment '起点日期',
-    end_point_date   date comment '止点日期',
-    will             varchar(10) comment '趋势意向：上涨、下跌',
-
-    create_by        varchar(64) default 'sys'                                         null comment '创建者',
-    create_time      datetime    default current_timestamp                             null comment '创建时间',
-    update_by        varchar(64) default 'sys'                                         null comment '更新者',
-    update_time      datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark           varchar(500)                                                      null comment '备注'
-) comment '股票MACD分析';
-create unique index idx_stock_macd_analyze on stock_macd_analyze (stock_code, trade_date);
-create index idx_stock_macd_analyze_date on stock_macd_analyze (trade_date);
-
-
--- 股票转红分析
-# drop table  if exists stock_trans_red_analyze;
-create table stock_trans_red_analyze
-(
-    id               bigint primary key auto_increment comment '主键id',
-    stock_code       varchar(10) comment '股票代码',
-    stock_name       varchar(20) comment '股票名称',
-    trade_date       date comment '交易日期',
-    macd             decimal(16, 3) comment 'MACD值',
-    zd               decimal(16, 2) comment '涨跌幅[%]',
-    sum_zd           decimal(16, 2)                                                    null comment '波段总涨跌幅[%]',
-    peek_sum_zd      decimal(16, 2)                                                    null comment '波段peek涨跌幅[%]',
-    start_point_date date comment '起点日期',
-    end_point_date   date comment '止点日期',
-    will             varchar(10) comment '趋势意向：上涨、下跌',
-
-    create_by        varchar(64) default 'sys'                                         null comment '创建者',
-    create_time      datetime    default current_timestamp                             null comment '创建时间',
-    update_by        varchar(64) default 'sys'                                         null comment '更新者',
-    update_time      datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark           varchar(500)                                                      null comment '备注'
-) comment '股票转红分析';
-create unique index idx_stock_trans_red_analyze on stock_trans_red_analyze (stock_code, trade_date);
-create index idx_stock_trans_red_analyze_date on stock_trans_red_analyze (trade_date);
-
-
--- 选股数据
--- drop table if exists stock_choice;
-create table stock_choice
-(
-    id                    bigint primary key auto_increment comment '主键id',
-    stock_code            varchar(10) comment '股票代码',
-    stock_name            varchar(20) comment '股票名称',
-    trade_date            date comment '交易日期',
-    analyze_source        varchar(10) comment '分析来源',
-    macd                  decimal(16, 3) comment 'MACD值',
-    zd                    decimal(16, 2) comment '涨跌幅[%]',
-    find_point_date       date comment '发现点日期',
-    start_point_date      date comment '起点日期',
-    will                  varchar(10) comment '趋势意向：上涨、下跌',
-    industry_name         varchar(10) comment '行业分类',
-    trade_num             decimal(16, 2) null comment '成交量[手]',
-    close_price           decimal(16, 2) null comment '收盘价[元]',
-    gt_three_percent_rate decimal(16, 4) null comment '大于[3%]收益的占比',
-    analyze_total_num     int null comment '当前股票分析区段数量',
-    tags                  varchar(200) null comment '标签',
-    level                 varchar(10) null comment '等级:可选、已买',
-
-    create_by             varchar(64) default 'sys' null comment '创建者',
-    create_time           datetime    default current_timestamp null comment '创建时间',
-    update_by             varchar(64) default 'sys' null comment '更新者',
-    update_time           datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark                varchar(500) null comment '备注'
-) comment '选股数据';
-create index idx_stock_choice on stock_choice (stock_code, trade_date);
-create index idx_stock_choice_date on stock_choice (trade_date);
-
-
-
--- 选股基线
-create table stock_choice_baseline
-(
-    id          int primary key auto_increment comment '主键id',
-    stock_code  varchar(10) comment '股票代码',
-    avg_macd        decimal(16, 3) comment 'avg_MACD值',
-    max_macd        decimal(16, 3) comment 'max_MACD值',
-    min_macd        decimal(16, 3) comment 'min_MACD值',
-    avg_zd          decimal(16, 2) comment 'avg_涨跌幅[%]',
-    max_zd          decimal(16, 2) comment 'max_涨跌幅[%]',
-    min_zd          decimal(16, 2) comment 'min_涨跌幅[%]',
-    arise_num   int comment '出现次数',
-
-    create_by   varchar(64) default 'sys'                                         null comment '创建者',
-    create_time datetime    default current_timestamp                             null comment '创建时间',
-    update_by   varchar(64) default 'sys'                                         null comment '更新者',
-    update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark      varchar(500)                                                      null comment '备注'
-) comment '选股基线';
-create unique index idx_stock_choice_baseline on stock_choice_baseline (stock_code);
-
--- 选股基线：盈亏比：成功率
-create table stock_choice_baseline_rate
-(
-    id            int auto_increment comment '主键id'
-        primary key,
-    stock_code    varchar(10)                           null comment '股票代码',
-    stock_name    varchar(20)                           null comment '股票名称',
-    industry_name varchar(20)                           null comment '行业',
-    base_macd     decimal(16, 3)                        null comment 'base_MACD值',
-    base_zd       decimal(16, 2)                        null comment 'base_涨跌幅[%]',
-    up_sum        decimal(16, 2)                        null comment '盈利总幅度[%]',
-    down_sum      decimal(16, 2)                        null comment '亏损总幅度[%]',
-    all_sum       decimal(16, 2)                        null comment '盈亏总幅度[%]',
-    up_num        int                                   null comment '盈利次数',
-    down_num      int                                   null comment '亏损次数',
-
-    create_by     varchar(64) default 'sys'             null comment '创建者',
-    create_time   datetime    default CURRENT_TIMESTAMP null comment '创建时间',
-    update_by     varchar(64) default 'sys'             null comment '更新者',
-    update_time   datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    remark        varchar(500)                          null comment '备注'
-) comment '选股基线rate';
-create unique index idx_stock_choice_baseline_rate on stock_choice_baseline_rate (stock_code);
-
-
--- 领涨股票
-create table stock_lead_up
-(
-    id            int auto_increment comment '主键id'
-        primary key,
-    stock_code    varchar(10)                           null comment '股票代码',
-    stock_name    varchar(20)                           null comment '股票名称',
-    industry_name varchar(20)                           null comment '行业',
-    nums          int                                   null comment '领涨次数',
-    pj            int                                   null comment '平均涨跌幅度[%]',
-    order_num     int                                   null comment '排序',
-
-    create_by     varchar(64) default 'sys'             null comment '创建者',
-    create_time   datetime    default CURRENT_TIMESTAMP null comment '创建时间',
-    update_by     varchar(64) default 'sys'             null comment '更新者',
-    update_time   datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    remark        varchar(500)                          null comment '备注'
-) comment '领涨股票';
-create unique index idx_stock_lead_up on stock_lead_up (stock_code);
-drop table stock_lead_up;
-
-
-
-
--- 股票MA
+-- 股票MA_dn
 create table stock_ma_dn
 (
     id          bigint primary key auto_increment comment '主键id',
     stock_code  varchar(10) comment '股票代码',
     stock_name  varchar(20) comment '股票名称',
     trade_date  date comment '交易日期',
-    ma3        decimal(16, 3) comment 'ma3',
-    ma5        decimal(16, 3) comment 'ma5',
+    ma3         decimal(16, 3) comment 'ma3',
+    ma5         decimal(16, 3) comment 'ma5',
     ma10        decimal(16, 3) comment 'maa10',
     ma15        decimal(16, 3) comment 'ma15',
     ma20        decimal(16, 3) comment 'ma20',
     ma30        decimal(16, 3) comment 'ma30',
     ma60        decimal(16, 3) comment 'ma60',
-    ma120        decimal(16, 3) comment 'ma120',
-    ma200        decimal(16, 3) comment 'ma200',
-    ma250        decimal(16, 3) comment 'ma250',
+    ma120       decimal(16, 3) comment 'ma120',
+    ma200       decimal(16, 3) comment 'ma200',
+    ma250       decimal(16, 3) comment 'ma250',
 
     create_by   varchar(64) default 'sys'                                         null comment '创建者',
     create_time datetime    default current_timestamp                             null comment '创建时间',
     update_by   varchar(64) default 'sys'                                         null comment '更新者',
     update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
     remark      varchar(500)                                                      null comment '备注'
-) comment '股票MA';
+) comment '股票MA_dn';
 create unique index idx_stock_ma_dn on stock_ma_dn (stock_code, trade_date);
 create index idx_stock_ma_dn_date on stock_ma_dn (trade_date);
+
+-- 股票MA_60m
+create table stock_ma_60m
+(
+    id              bigint primary key auto_increment comment '主键id',
+    stock_code      varchar(10) comment '股票代码',
+    stock_name      varchar(20) comment '股票名称',
+    trade_date_time datetime comment '交易日期',
+    ma3             decimal(16, 3) comment 'ma3',
+    ma5             decimal(16, 3) comment 'ma5',
+    ma10            decimal(16, 3) comment 'maa10',
+    ma15            decimal(16, 3) comment 'ma15',
+    ma20            decimal(16, 3) comment 'ma20',
+    ma30            decimal(16, 3) comment 'ma30',
+    ma60            decimal(16, 3) comment 'ma60',
+    ma120           decimal(16, 3) comment 'ma120',
+    ma200           decimal(16, 3) comment 'ma200',
+    ma250           decimal(16, 3) comment 'ma250',
+
+    create_by       varchar(64) default 'sys'                                         null comment '创建者',
+    create_time     datetime    default current_timestamp                             null comment '创建时间',
+    update_by       varchar(64) default 'sys'                                         null comment '更新者',
+    update_time     datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark          varchar(500)                                                      null comment '备注'
+) comment '股票MA_60m';
+create index idx_stock_ma_60 on stock_ma_60m (stock_code, trade_date_time);
+create index idx_stock_ma_60_date on stock_ma_60m (trade_date_time);
