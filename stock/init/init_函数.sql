@@ -17,3 +17,24 @@ BEGIN
     return t_n;
 end $$
 DELIMITER ;
+
+drop function get_trade_60m;
+-- 60m函数
+DELIMITER $$
+create function get_trade_60m(base_60m timestamp, n int) returns timestamp
+    READS SQL DATA
+    DETERMINISTIC
+BEGIN
+    declare t_n datetime default base_60m;
+
+    select trade_60m
+    into t_n
+    from stock_trade_60m
+    where id =
+          (select id
+           from stock_trade_60m t1
+           where t1.trade_60m = (select max(trade_60m) from stock_trade_60m where trade_60m <= base_60m))
+              - n;
+    return t_n;
+end $$
+DELIMITER ;

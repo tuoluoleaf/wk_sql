@@ -30,14 +30,6 @@ create table industry_category
     update_user   varchar(20) comment '更新人'
 ) comment '行业分类';
 
--- 交易日
-create table stock_trade_day
-(
-    id        int primary key auto_increment comment '主键id',
-    trade_day date comment '交易日期'
-);
-create unique index idx_stock_trade_day on stock_trade_day (trade_day);
-
 
 -- 股票分时交易:dn(日线未复权)
 create table stock_trade_dn
