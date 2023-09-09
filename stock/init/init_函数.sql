@@ -34,7 +34,7 @@ BEGIN
           (select id
            from stock_trade_60m t1
            where t1.trade_60m = (select max(trade_60m) from stock_trade_60m where trade_60m <= base_60m))
-              - n;
+              + n;
     return t_n;
 end $$
 DELIMITER ;
