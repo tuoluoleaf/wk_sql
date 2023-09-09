@@ -1,6 +1,4 @@
--- MA 选股3：
-# 多头趋势
-
+-- MA_60M：底部反转，做T
 select smdCurrent.stock_code,
        smdCurrent.stock_name,
        sbi.industry_name,
