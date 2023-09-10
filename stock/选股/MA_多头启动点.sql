@@ -1,5 +1,4 @@
--- MA  多头趋势
-
+-- MA 多头启动点
 select smdCurrent.stock_code,
        smdCurrent.stock_name,
        sbi.industry_name,
@@ -27,8 +26,7 @@ from stock_ma_dn smdCurrent,
          left join stock_trade_dn stdAfter on stdAfter.stock_code = stdCurrent.stock_code and
                                               stdAfter.trade_date = get_trade_day(stdCurrent.trade_date, 1)
 where 1 = 1
-  and smdCurrent.trade_date = get_trade_day(current_date, -0)
-#   and smdCurrent.trade_date = date'2023-08-21'
+  and smdCurrent.trade_date = get_trade_day(current_date, -0) #   and smdCurrent.trade_date = date'2023-08-21'
   and smdBefore.stock_code = smdCurrent.stock_code
   and smdBefore.trade_date = get_trade_day(smdCurrent.trade_date, -1)
   and smdCurrent.ma5 >= smdCurrent.ma10
@@ -40,9 +38,13 @@ where 1 = 1
   and stdCurrent.trade_date = smdCurrent.trade_date
   and stdCurrent.close_price >= 10
   and stdCurrent.trade_num >= 50000
+  -- 市值 [50亿，300亿]
+  and (stdCurrent.trade_money / stdCurrent.hs * 100) >= 5000000000
+  and (stdCurrent.trade_money / stdCurrent.hs * 100) <= 30000000000
 
 order by sbi.industry_name
 ;
+
 
 
 
