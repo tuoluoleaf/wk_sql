@@ -27,9 +27,9 @@ from stock_ma_dn maCurrent,
          left join stock_trade_dn tradeAfter on tradeAfter.stock_code = tradeCurrent.stock_code and
                                                 tradeAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
-#   and maCurrent.trade_date = get_trade_day(current_date, -20)
-  and maCurrent.trade_date >= date'2023-07-01'
-  and maCurrent.trade_date <= date'2023-09-01'
+  and maCurrent.trade_date = get_trade_day(current_date, -1)
+#   and maCurrent.trade_date >= date'2023-07-01'
+#   and maCurrent.trade_date <= date'2023-09-01'
   and maBefore.stock_code = maCurrent.stock_code
   and maBefore.trade_date = get_trade_day(maCurrent.trade_date, -1)
 
