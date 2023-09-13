@@ -1,46 +1,73 @@
 -- MA 多头启动点
-select smdCurrent.stock_code,
-       smdCurrent.stock_name,
+select smaCurrent.stock_code,
+       smaCurrent.stock_name,
        sbi.industry_name,
-       smdCurrent.trade_date,
-       stdCurrent.zd,
-       stdCurrent.hs,
+       smaCurrent.trade_date,
+       tradeCurrent.zd,
+       tradeCurrent.hs,
        stdAfter.zd,
        stdAfter.hs,
        (select sum(t.zd)
         from stock_trade_dn t
-        where smdCurrent.stock_code = t.stock_code
-          and t.trade_date >= get_trade_day(smdCurrent.trade_date, 2)
-          and t.trade_date <= get_trade_day(smdCurrent.trade_date, 8)) as sumZd,
-       stdCurrent.close_price,
-       stdCurrent.trade_num / 10000                                    as trade_num,
-       smdCurrent.ma5,
-       smdCurrent.ma10,
-       smdCurrent.ma20
-from stock_ma_dn smdCurrent,
-     stock_ma_dn smdBefore,
+        where smaCurrent.stock_code = t.stock_code
+          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
+          and t.trade_date <= get_trade_day(smaCurrent.trade_date, 8)) as sumZd,
+       tradeCurrent.close_price,
+       tradeCurrent.trade_num / 10000                                  as trade_num,
+       smaCurrent.ma5,
+       smaCurrent.ma10,
+       smaCurrent.ma20
+from stock_ma_dn smaCurrent,
+     stock_ma_dn smaBefore,
      stock_base_info sbi,
-     stock_trade_dn stdCurrent
-         left join stock_ma_dn smdAfter on smdAfter.stock_code = stdCurrent.stock_code and
-                                           smdAfter.trade_date = get_trade_day(stdCurrent.trade_date, 1)
-         left join stock_trade_dn stdAfter on stdAfter.stock_code = stdCurrent.stock_code and
-                                              stdAfter.trade_date = get_trade_day(stdCurrent.trade_date, 1)
+     stock_trade_dn tradeBefore,
+     stock_trade_dn tradeCurrent
+         left join stock_ma_dn smdAfter on smdAfter.stock_code = tradeCurrent.stock_code and
+                                           smdAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
+         left join stock_trade_dn stdAfter on stdAfter.stock_code = tradeCurrent.stock_code and
+                                              stdAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
-  and smdCurrent.trade_date = get_trade_day(current_date, -0) #   and smdCurrent.trade_date = date'2023-08-21'
-  and smdBefore.stock_code = smdCurrent.stock_code
-  and smdBefore.trade_date = get_trade_day(smdCurrent.trade_date, -1)
-  and smdCurrent.ma5 >= smdCurrent.ma10
-  and smdCurrent.ma10 >= smdCurrent.ma20
-  and !(smdBefore.ma5 >= smdBefore.ma10 and smdBefore.ma10 >= smdBefore.ma20)
+#   and smaCurrent.trade_date = get_trade_day(current_date, -10)
+  #   and smdCurrent.trade_date = date'2023-08-21'
+  and smaCurrent.trade_date >= date'2023-08-01'
+  and smaCurrent.trade_date <= date'2023-09-01'
+  and smaBefore.stock_code = smaCurrent.stock_code
+  and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
-  and sbi.stock_code = smdCurrent.stock_code
-  and stdCurrent.stock_code = smdCurrent.stock_code
-  and stdCurrent.trade_date = smdCurrent.trade_date
-  and stdCurrent.close_price >= 10
-  and stdCurrent.trade_num >= 50000
+  -- 行业
+  and sbi.stock_code = smaCurrent.stock_code
+
+  -- ma
+  and smaCurrent.ma5 >= smaCurrent.ma10
+  and smaCurrent.ma10 >= smaCurrent.ma20
+  and !(smaBefore.ma5 >= smaBefore.ma10 and smaBefore.ma10 >= smaBefore.ma20)
+
+
+  -- 60天前交易
+#   and tradeCurrent.close_price > (select max(t.close_price)
+#                                   from stock_trade_dn t
+#                                   where t.stock_code = smaCurrent.stock_code
+#                                     and t.trade_date >= get_trade_day(smaCurrent.trade_date, -60)
+#                                     and t.trade_date <= get_trade_day(smaCurrent.trade_date, -20))
+#
+
+  -- 昨天交易
+  and tradeBefore.stock_code = smaCurrent.stock_code
+  and tradeBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
+  and tradeBefore.trade_num <= tradeCurrent.trade_num
+
+
+  -- 今天交易
+  and tradeCurrent.stock_code = smaCurrent.stock_code
+  and tradeCurrent.trade_date = smaCurrent.trade_date
+  and tradeCurrent.zd > 0
+  and tradeCurrent.zd < 8
+  and tradeCurrent.close_price >= tradeCurrent.open_price
+  and tradeCurrent.close_price >= 10
+  and tradeCurrent.trade_num >= 50000
   -- 市值 [50亿，300亿]
-  and (stdCurrent.trade_money / stdCurrent.hs * 100) >= 5000000000
-  and (stdCurrent.trade_money / stdCurrent.hs * 100) <= 30000000000
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 5000000000
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 30000000000
 
 order by sbi.industry_name
 ;
