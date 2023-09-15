@@ -26,7 +26,8 @@ from stock_ma_dn smdCurrent,
          left join stock_trade_dn stdAfter on stdAfter.stock_code = stdCurrent.stock_code and
                                               stdAfter.trade_date = get_trade_day(stdCurrent.trade_date, 1)
 where 1 = 1
-  and smdCurrent.trade_date = get_trade_day(current_date, -0) #   and smdCurrent.trade_date = date'2023-08-21'
+  and smdCurrent.trade_date = get_trade_day(current_date, -0)
+  #   and smdCurrent.trade_date = date'2023-08-21'
   and smdBefore.stock_code = smdCurrent.stock_code
   and smdBefore.trade_date = get_trade_day(smdCurrent.trade_date, -1)
   and smdCurrent.ma5 >= smdCurrent.ma10
