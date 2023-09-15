@@ -28,7 +28,7 @@ from stock_ma_dn smaCurrent,
                                               stdAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -10)
-  #   and smdCurrent.trade_date = date'2023-08-21'
+  #   and tradeCurrent.trade_date = date'2023-08-21'
   and smaCurrent.trade_date >= date'2023-08-01'
   and smaCurrent.trade_date <= date'2023-09-01'
   and smaBefore.stock_code = smaCurrent.stock_code
@@ -41,22 +41,6 @@ where 1 = 1
   and smaCurrent.ma5 >= smaCurrent.ma10
   and smaCurrent.ma10 >= smaCurrent.ma20
   and !(smaBefore.ma5 >= smaBefore.ma10 and smaBefore.ma10 >= smaBefore.ma20)
-
-
-  -- 60天前交易
-#   and tradeCurrent.close_price > (select max(t.close_price)
-#                                   from stock_trade_dn t
-#                                   where t.stock_code = smaCurrent.stock_code
-#                                     and t.trade_date >= get_trade_day(smaCurrent.trade_date, -60)
-#                                     and t.trade_date <= get_trade_day(smaCurrent.trade_date, -20))
-#
-  and smdCurrent.trade_date = get_trade_day(current_date, -0)
-  #   and smdCurrent.trade_date = date'2023-08-21'
-  and smdBefore.stock_code = smdCurrent.stock_code
-  and smdBefore.trade_date = get_trade_day(smdCurrent.trade_date, -1)
-  and smdCurrent.ma5 >= smdCurrent.ma10
-  and smdCurrent.ma10 >= smdCurrent.ma20
-  and !(smdBefore.ma5 >= smdBefore.ma10 and smdBefore.ma10 >= smdBefore.ma20)
 
   -- 昨天交易
   and tradeBefore.stock_code = smaCurrent.stock_code
