@@ -22,8 +22,8 @@ from stock_ma_dn smaCurrent,
          left join stock_trade_dn tradeAfter on tradeAfter.stock_code = tradeCurrent.stock_code and
                                                 tradeAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
-#   and smaCurrent.trade_date = get_trade_day(current_date, -2)
-  and smaCurrent.trade_date = date'2023-08-04'
+  and smaCurrent.trade_date = get_trade_day(current_date, -0)
+#   and smaCurrent.trade_date = date'2023-08-04'
 #   and smaCurrent.trade_date >= date'2023-08-01'
 #   and smaCurrent.trade_date <= date'2023-09-01'
   and smaBefore.stock_code = smaCurrent.stock_code
@@ -34,7 +34,6 @@ where 1 = 1
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma200
   and smaBefore.ma5 < smaBefore.ma200
-
 
 
   -- 昨天交易
@@ -49,9 +48,9 @@ where 1 = 1
   and tradeCurrent.zd < 8
   and tradeCurrent.close_price >= tradeCurrent.open_price
   and tradeCurrent.close_price >= 10
-  and tradeCurrent.trade_num >= 50000
+  and tradeCurrent.trade_num >= 30000
   -- 市值 [50亿，300亿]
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 5000000000
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 3000000000
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 30000000000
 
 order by sbi.industry_name
