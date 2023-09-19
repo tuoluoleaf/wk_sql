@@ -47,11 +47,11 @@ where 1 = 1
   and tradeCurrent.zd > 1
   and tradeCurrent.zd < 8
   and tradeCurrent.close_price >= tradeCurrent.open_price
-  and tradeCurrent.close_price >= 10
+  and tradeCurrent.close_price >= 6
   and tradeCurrent.trade_num >= 30000
   -- 市值 [50亿，300亿]
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 3000000000
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 30000000000
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 30 * 100000000
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 300 * 100000000
 
 order by sbi.industry_name
 ;
