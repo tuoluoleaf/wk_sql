@@ -1,4 +1,4 @@
--- MA 多头连续
+-- MA
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
