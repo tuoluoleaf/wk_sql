@@ -2,30 +2,37 @@
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
-       smaCurrent.trade_date,
+       smaCurrent.trade_date                              as startDate,
+       (select max(t2.trade_date)
+        from stock_ma_dn t2
+        where t2.stock_code = smaCurrent.stock_code
+          and t2.trade_date >= smaCurrent.trade_date
+          and t2.ma5 <= t2.ma200)                         as endDate,
        tradeCurrent.zd,
+       (select sum(t.zd)
+        from stock_trade_dn t
+        where smaCurrent.stock_code = t.stock_code
+          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t.trade_date <= (select ifnull(min(t2.trade_date), get_trade_day(current_date, 0))
+                               from stock_ma_dn t2
+                               where t2.stock_code = smaCurrent.stock_code
+                                 and t2.trade_date >= smaCurrent.trade_date
+                                 and t2.ma5 <= t2.ma200)) as sumZd,
        tradeCurrent.hs,
-       tradeAfter.zd,
-       tradeAfter.hs,
        tradeCurrent.close_price,
-       tradeCurrent.trade_num / 10000 as trade_num,
+       tradeCurrent.trade_num / 10000                     as trade_num,
        smaCurrent.ma5,
-       smaCurrent.ma10,
-       smaCurrent.ma20
+       smaCurrent.ma200
 from stock_ma_dn smaCurrent,
      stock_ma_dn smaBefore,
      stock_base_info sbi,
      stock_trade_dn tradeBefore,
      stock_trade_dn tradeCurrent
-         left join stock_ma_dn smaAfter on smaAfter.stock_code = tradeCurrent.stock_code and
-                                           smaAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
-         left join stock_trade_dn tradeAfter on tradeAfter.stock_code = tradeCurrent.stock_code and
-                                                tradeAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
-  and smaCurrent.trade_date = get_trade_day(current_date, -0)
+#   and smaCurrent.trade_date = get_trade_day(current_date, -5)
 #   and smaCurrent.trade_date = date'2023-08-04'
-#   and smaCurrent.trade_date >= date'2023-08-01'
-#   and smaCurrent.trade_date <= date'2023-09-01'
+  and smaCurrent.trade_date >= date'2023-09-01'
+  and smaCurrent.trade_date <= date'2023-10-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
   -- 行业
@@ -53,7 +60,7 @@ where 1 = 1
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 30 * 100000000
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 300 * 100000000
 
-order by sbi.industry_name
+order by smaCurrent.trade_date desc
 ;
 
 
