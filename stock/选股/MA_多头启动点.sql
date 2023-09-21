@@ -7,13 +7,8 @@ select smaCurrent.stock_code,
        tradeCurrent.hs,
        stdAfter.zd,
        stdAfter.hs,
-       (select sum(t.zd)
-        from stock_trade_dn t
-        where smaCurrent.stock_code = t.stock_code
-          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
-          and t.trade_date <= get_trade_day(smaCurrent.trade_date, 22)) as sumZd,
        tradeCurrent.close_price,
-       tradeCurrent.trade_num / 10000                                  as trade_num,
+       tradeCurrent.trade_num / 10000                                   as trade_num,
        smaCurrent.ma5,
        smaCurrent.ma10,
        smaCurrent.ma20
@@ -27,7 +22,7 @@ from stock_ma_dn smaCurrent,
          left join stock_trade_dn stdAfter on stdAfter.stock_code = tradeCurrent.stock_code and
                                               stdAfter.trade_date = get_trade_day(tradeCurrent.trade_date, 1)
 where 1 = 1
-  and smaCurrent.trade_date = get_trade_day(current_date, -10)
+  and smaCurrent.trade_date = get_trade_day(current_date, -66)
 #     and tradeCurrent.trade_date = date'2023-08-21'
 #   and smaCurrent.trade_date >= date'2023-08-01'
 #   and smaCurrent.trade_date <= date'2023-09-01'
