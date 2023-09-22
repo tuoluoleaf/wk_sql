@@ -14,6 +14,7 @@ select smaCurrent.stock_code,
        smaCurrent.ma200
 from stock_ma_dn smaCurrent,
      stock_ma_dn smaBefore,
+     stock_ma_dn smaBefore2,
      stock_ma_dn smaBefore200d,
      stock_trade_dn tradeCurrent
 where 1 = 1
@@ -23,6 +24,8 @@ where 1 = 1
   and smaCurrent.trade_date <= date'2023-10-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
+  and smaBefore2.stock_code = smaCurrent.stock_code
+  and smaBefore2.trade_date = get_trade_day(smaCurrent.trade_date, -2)
 
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma20
@@ -30,7 +33,8 @@ where 1 = 1
   and smaCurrent.ma20 >= smaBefore.ma20
 
   and smaBefore.ma5 >= smaBefore.ma20
-  and (smaBefore.ma5 - smaBefore.ma20)/smaBefore.ma20 < 0.005
+  and (smaBefore.ma5 - smaBefore.ma20) / smaBefore.ma20 < 0.005
+  and smaBefore2.ma5 > smaBefore2.ma20
 
   -- 200天前
   and smaBefore200d.stock_code = smaCurrent.stock_code
