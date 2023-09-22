@@ -43,8 +43,8 @@ where 1 = 1
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
-#   and tradeCurrent.zd > -1
-#   and tradeCurrent.zd < 8
+  and tradeCurrent.zd > -1
+  and tradeCurrent.zd < 11
   and tradeCurrent.close_price >= tradeCurrent.open_price
   and tradeCurrent.close_price >= 6
   and tradeCurrent.trade_num >= 30000
