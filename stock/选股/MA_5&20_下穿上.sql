@@ -6,7 +6,7 @@ select smaCurrent.stock_code,
        (select sum(t.zd)
         from stock_trade_dn t
         where smaCurrent.stock_code = t.stock_code
-          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
           and t.trade_date <= get_trade_day(smaCurrent.trade_date, 10)) as sumZd,
        tradeCurrent.zd,
        smaCurrent.ma5,
@@ -50,7 +50,7 @@ where 1 = 1
 
 -- 行业
   and sbi.stock_code = smaCurrent.stock_code
-order by smaCurrent.trade_date, sbi.industry_name desc
+order by smaCurrent.trade_date desc, sbi.industry_name desc
 ;
 
 
