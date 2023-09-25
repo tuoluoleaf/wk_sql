@@ -3,11 +3,23 @@ select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
        smaCurrent.trade_date,
-       (select sum(t.zd)
-        from stock_trade_dn t
-        where smaCurrent.stock_code = t.stock_code
-          and t.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
-          and t.trade_date <= get_trade_day(smaCurrent.trade_date, 10)) as sumZd,
+       (select round((t2.close_price - t1.open_price) / t1.open_price * 100, 2)
+        from stock_trade_dn t1,
+             stock_trade_dn t2
+        where t1.stock_code = smaCurrent.stock_code
+          and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
+          and t2.stock_code = smaCurrent.stock_code
+          and t2.trade_date = (select max(t3.trade_date)
+                               from stock_trade_dn t3
+                               where t3.stock_code = smaCurrent.stock_code and t3.trade_date <= get_trade_day(smaCurrent.trade_date, 10))) as sumZd,
+     (select round((min(t2.close_price) - t1.open_price) / t1.open_price * 100, 2)
+        from stock_trade_dn t1,
+             stock_trade_dn t2
+        where t1.stock_code = smaCurrent.stock_code
+          and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
+          and t2.stock_code = smaCurrent.stock_code
+          and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15)) as sumMinZd,
        tradeCurrent.zd,
        smaCurrent.ma5,
        smaCurrent.ma20,
@@ -21,7 +33,7 @@ where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date = date'2023-06-09'
   and smaCurrent.trade_date >= date'2023-01-01'
-  and smaCurrent.trade_date <= date'2024-01-01'
+  and smaCurrent.trade_date <= date'2023-10-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
