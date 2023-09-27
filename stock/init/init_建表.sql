@@ -6,7 +6,6 @@ create table stock_base_info
     stock_name     varchar(20) comment '股票名称',
     market         varchar(10) comment '市场',
     industry_name  varchar(20) comment '行业名称',
-    turnover_gt_8w varchar(4) comment '成交量大于8W',
 
     create_by      varchar(64) default '' null comment '创建者',
     create_time    datetime               null comment '创建时间',
