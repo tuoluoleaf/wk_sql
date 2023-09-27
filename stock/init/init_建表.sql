@@ -1,17 +1,17 @@
 -- 股票基本信息：stock_base_info
 create table stock_base_info
 (
-    id             int primary key auto_increment comment '主键id',
-    stock_code     varchar(10) comment '股票代码',
-    stock_name     varchar(20) comment '股票名称',
-    market         varchar(10) comment '市场',
-    industry_name  varchar(20) comment '行业名称',
+    id            int primary key auto_increment comment '主键id',
+    stock_code    varchar(10) comment '股票代码',
+    stock_name    varchar(20) comment '股票名称',
+    market        varchar(10) comment '市场',
+    industry_name varchar(20) comment '行业名称',
 
-    create_by      varchar(64) default '' null comment '创建者',
-    create_time    datetime               null comment '创建时间',
-    update_by      varchar(64) default '' null comment '更新者',
-    update_time    datetime               null comment '更新时间',
-    remark         varchar(500)           null comment '备注'
+    create_by     varchar(64) default 'sys'                                         null comment '创建者',
+    create_time   datetime    default current_timestamp                             null comment '创建时间',
+    update_by     varchar(64) default 'sys'                                         null comment '更新者',
+    update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark        varchar(500)                                                      null comment '备注'
 ) comment '股票基本信息';
 create unique index idx_stock_base_info on stock_base_info (stock_code);
 
