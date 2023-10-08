@@ -13,6 +13,7 @@ select smaCurrent.stock_code,
                                from stock_trade_dn t3
                                where t3.stock_code = smaCurrent.stock_code
                                  and t3.trade_date <= get_trade_day(smaCurrent.trade_date, 10)))    as sumZd,
+
        (select round((max(t2.highest_price) - t1.open_price) / t1.open_price * 100, 2)
         from stock_trade_dn t1,
              stock_trade_dn t2
@@ -21,7 +22,8 @@ select smaCurrent.stock_code,
           and t2.stock_code = smaCurrent.stock_code
           and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
           and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10))                            as sumMaxZd,
-       (select t1.trade_date
+
+       (select min(t1.trade_date)
         from stock_trade_dn t1
         where t1.stock_code = smaCurrent.stock_code
           and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
@@ -31,6 +33,7 @@ select smaCurrent.stock_code,
                                   where t2.stock_code = smaCurrent.stock_code
                                     and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
                                     and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10))) as higestPriceDate,
+
        (select round((min(t2.lowest_price) - t1.open_price) / t1.open_price * 100, 2)
         from stock_trade_dn t1,
              stock_trade_dn t2
@@ -39,7 +42,8 @@ select smaCurrent.stock_code,
           and t2.stock_code = smaCurrent.stock_code
           and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
           and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10))                            as sumMinZd,
-       (select t1.trade_date
+
+       (select min(t1.trade_date)
         from stock_trade_dn t1
         where t1.stock_code = smaCurrent.stock_code
           and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
@@ -76,7 +80,7 @@ where 1 = 1
   -- 200天前
   and smaBefore200d.stock_code = smaCurrent.stock_code
   and smaBefore200d.trade_date = get_trade_day(smaCurrent.trade_date, -200)
-  and smaCurrent.ma200 <= smaBefore200d.ma200
+#   and smaCurrent.ma200 <= smaBefore200d.ma200
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
