@@ -40,18 +40,18 @@ select smaCurrent.stock_code,
         where t1.stock_code = smaCurrent.stock_code
           and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
           and t2.stock_code = smaCurrent.stock_code
-          and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
           and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10))                            as sumMinZd,
 
        (select min(t1.trade_date)
         from stock_trade_dn t1
         where t1.stock_code = smaCurrent.stock_code
-          and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
           and t1.trade_date <= get_trade_day(smaCurrent.trade_date, 10)
           and t1.lowest_price = (select min(t2.lowest_price)
                                  from stock_trade_dn t2
                                  where t2.stock_code = smaCurrent.stock_code
-                                   and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+                                   and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
                                    and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10)))  as lowestPriceDate,
 
        tradeCurrent.zd,
@@ -80,7 +80,7 @@ where 1 = 1
   -- 200天前
   and smaBefore200d.stock_code = smaCurrent.stock_code
   and smaBefore200d.trade_date = get_trade_day(smaCurrent.trade_date, -200)
-#   and smaCurrent.ma200 <= smaBefore200d.ma200
+  and smaCurrent.ma200 <= smaBefore200d.ma200
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
