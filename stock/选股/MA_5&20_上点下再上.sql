@@ -3,17 +3,6 @@ select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
        smaCurrent.trade_date,
-       (select round((t2.close_price - t1.open_price) / t1.open_price * 100, 2)
-        from stock_trade_dn t1,
-             stock_trade_dn t2
-        where t1.stock_code = smaCurrent.stock_code
-          and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
-          and t2.stock_code = smaCurrent.stock_code
-          and t2.trade_date = (select max(t3.trade_date)
-                               from stock_trade_dn t3
-                               where t3.stock_code = smaCurrent.stock_code
-                                 and t3.trade_date <= get_trade_day(smaCurrent.trade_date, 15)))    as sumZd,
-
        (select round((max(t2.highest_price) - t1.open_price) / t1.open_price * 100, 2)
         from stock_trade_dn t1,
              stock_trade_dn t2
