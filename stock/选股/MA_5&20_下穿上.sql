@@ -1,4 +1,6 @@
 -- MA_5&20_下穿上
+insert into stock_ma_5_up_20 (stock_code, stock_name, industry_name, trade_date, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, zd, ma5, ma20, ma200)
+
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
@@ -54,8 +56,7 @@ from stock_ma_dn smaCurrent,
      stock_base_info sbi
 where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-#   and smaCurrent.trade_date = date'2023-06-09'
-  and smaCurrent.trade_date >= date'2023-09-01'
+  and smaCurrent.trade_date >= date'2022-01-01'
   and smaCurrent.trade_date < date'2023-11-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
@@ -64,12 +65,12 @@ where 1 = 1
   and smaCurrent.ma5 >= smaCurrent.ma20
   and smaCurrent.ma20 >= smaCurrent.ma200
   and smaBefore.ma5 < smaBefore.ma20
-  and smaCurrent.ma20 >= smaBefore.ma20
+#   and smaCurrent.ma20 >= smaBefore.ma20
 
   -- 200天前
   and smaBefore200d.stock_code = smaCurrent.stock_code
   and smaBefore200d.trade_date = get_trade_day(smaCurrent.trade_date, -200)
-  and smaCurrent.ma200 <= smaBefore200d.ma200
+#   and smaCurrent.ma200 <= smaBefore200d.ma200
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
@@ -89,17 +90,4 @@ order by smaCurrent.trade_date desc, sbi.industry_name desc
 ;
 
 
-select t1.trade_date, t1.n1, ifnull(t2.n2, 0) as n2, ifnull(round(t2.n2/t1.n1, 2), 0) as zb
-from (select trade_date, count(0) as n1
-      from stock_ma_5_up_20 t1
-      where trade_date >= date'2023-01-01'
-      group by trade_date) t1
 
-         left join (select trade_date, count(0) as n2
-                    from stock_ma_5_up_20 t1
-                    where trade_date >= date'2023-01-01'
-                      and sum_max_zd >= 3
-                      and (sum_min_zd > -4 || highest_price_date < lowest_price_date)
-                    group by trade_date) t2
-          on t1.trade_date = t2.trade_date
-order by t1.trade_date desc;
