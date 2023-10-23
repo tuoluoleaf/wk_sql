@@ -1,5 +1,5 @@
 -- MA_5&20_下穿上
-insert into stock_ma_5_up_20 (stock_code, stock_name, industry_name, trade_date, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, zd, ma5, ma20, ma200)
+# insert into stock_ma_5_up_20 (stock_code, stock_name, industry_name, trade_date, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, zd, ma5, ma20, ma200)
 
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
@@ -55,7 +55,7 @@ from stock_ma_dn smaCurrent,
      stock_base_info sbi
 where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-  and smaCurrent.trade_date >= date'2022-01-01'
+  and smaCurrent.trade_date >= date'2023-09-01'
   and smaCurrent.trade_date < date'2023-11-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
@@ -63,8 +63,8 @@ where 1 = 1
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma20
   and smaCurrent.ma20 >= smaCurrent.ma200
-  and smaBefore.ma5 < smaBefore.ma20
   and smaCurrent.ma20 >= smaBefore.ma20
+  and smaBefore.ma5 < smaBefore.ma20
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code

@@ -3,24 +3,45 @@ select smaCurrent.stock_code,
        smaCurrent.stock_name,
        sbi.industry_name,
        smaCurrent.trade_date,
-       (select round((t2.close_price - t1.open_price) / t1.open_price * 100, 2)
-        from stock_trade_dn t1,
-             stock_trade_dn t2
-        where t1.stock_code = smaCurrent.stock_code
-          and t1.trade_date = get_trade_day(smaCurrent.trade_date, 21)
-          and t2.stock_code = smaCurrent.stock_code
-          and t2.trade_date = (select max(t3.trade_date)
-                               from stock_trade_dn t3
-                               where t3.stock_code = smaCurrent.stock_code
-                                 and t3.trade_date <= get_trade_day(smaCurrent.trade_date, 10))) as sumZd,
-     (select round((min(t2.close_price) - t1.open_price) / t1.open_price * 100, 2)
+       (select round((max(t2.highest_price) - t1.open_price) / t1.open_price * 100, 2)
         from stock_trade_dn t1,
              stock_trade_dn t2
         where t1.stock_code = smaCurrent.stock_code
           and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
           and t2.stock_code = smaCurrent.stock_code
           and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
-          and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 10)) as sumMinZd,
+          and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15))                            as sumMaxZd,
+
+       (select min(t1.trade_date)
+        from stock_trade_dn t1
+        where t1.stock_code = smaCurrent.stock_code
+          and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+          and t1.trade_date <= get_trade_day(smaCurrent.trade_date, 15)
+          and t1.highest_price = (select max(t2.highest_price)
+                                  from stock_trade_dn t2
+                                  where t2.stock_code = smaCurrent.stock_code
+                                    and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+                                    and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15))) as highestPriceDate,
+
+       (select round((min(t2.lowest_price) - t1.open_price) / t1.open_price * 100, 2)
+        from stock_trade_dn t1,
+             stock_trade_dn t2
+        where t1.stock_code = smaCurrent.stock_code
+          and t1.trade_date = get_trade_day(smaCurrent.trade_date, 1)
+          and t2.stock_code = smaCurrent.stock_code
+          and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
+          and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15))                            as sumMinZd,
+
+       (select min(t1.trade_date)
+        from stock_trade_dn t1
+        where t1.stock_code = smaCurrent.stock_code
+          and t1.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
+          and t1.trade_date <= get_trade_day(smaCurrent.trade_date, 15)
+          and t1.lowest_price = (select min(t2.lowest_price)
+                                 from stock_trade_dn t2
+                                 where t2.stock_code = smaCurrent.stock_code
+                                   and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
+                                   and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15)))  as lowestPriceDate,
        tradeCurrent.zd,
        smaCurrent.ma5,
        smaCurrent.ma20,
@@ -28,20 +49,26 @@ select smaCurrent.stock_code,
 from stock_ma_dn smaCurrent,
      stock_ma_dn smaBefore,
      stock_trade_dn tradeCurrent,
+     stock_ma_dn smaBefore200d,
      stock_base_info sbi
 where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -1)
 #   and smaCurrent.trade_date = date'2023-06-09'
   and smaCurrent.trade_date >= date'2023-09-01'
-  and smaCurrent.trade_date <= date'2023-10-01'
+  and smaCurrent.trade_date <= date'2023-11-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
   -- ma
-    and smaCurrent.ma5 >= smaCurrent.ma10
+  and smaCurrent.ma5 >= smaCurrent.ma10
   and smaCurrent.ma10 >= smaCurrent.ma20
 #   and smaCurrent.ma20 > smaCurrent.ma200
   and !(smaBefore.ma5 >= smaBefore.ma10 and smaBefore.ma10 >= smaBefore.ma20)
+
+  -- 200天前
+  and smaBefore200d.stock_code = smaCurrent.stock_code
+  and smaBefore200d.trade_date = get_trade_day(smaCurrent.trade_date, -200)
+  and smaCurrent.ma200 <= smaBefore200d.ma200
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
