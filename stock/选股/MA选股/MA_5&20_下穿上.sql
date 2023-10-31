@@ -42,7 +42,7 @@ select smaCurrent.stock_code,
           and t1.lowest_price = (select min(t2.lowest_price)
                                  from stock_trade_dn t2
                                  where t2.stock_code = smaCurrent.stock_code
-                                   and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 2)
+                                   and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
                                    and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 15)))  as lowestPriceDate,
 
        tradeCurrent.zd,
@@ -55,7 +55,7 @@ from stock_ma_dn smaCurrent,
      stock_base_info sbi
 where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-  and smaCurrent.trade_date >= date'2023-09-01'
+  and smaCurrent.trade_date >= date'2023-10-01'
   and smaCurrent.trade_date < date'2023-11-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
@@ -65,6 +65,7 @@ where 1 = 1
   and smaCurrent.ma20 >= smaCurrent.ma200
   and smaCurrent.ma20 >= smaBefore.ma20
   and smaBefore.ma5 < smaBefore.ma20
+
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
