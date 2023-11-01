@@ -52,7 +52,7 @@ from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent,
      stock_base_info sbi
 where 1 = 1
-  and smaCurrent.trade_date = get_trade_day(current_date, -20)
+  and smaCurrent.trade_date = get_trade_day(current_date, -10)
 #   and smaCurrent.trade_date >= date'2023-09-01'
 #   and smaCurrent.trade_date < date'2023-11-01'
 
@@ -61,6 +61,7 @@ where 1 = 1
   and tradeCurrent.lowest_price <= smaCurrent.ma10 and smaCurrent.ma10 <= tradeCurrent.highest_price
   and tradeCurrent.lowest_price <= smaCurrent.ma20 and smaCurrent.ma20 <= tradeCurrent.highest_price
   and tradeCurrent.lowest_price <= smaCurrent.ma30 and smaCurrent.ma30 <= tradeCurrent.highest_price
+  and smaCurrent.ma5 >= smaCurrent.ma200
 
 
   -- 今天交易
