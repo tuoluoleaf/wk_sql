@@ -1,5 +1,6 @@
 -- MA_5&30_下穿上
-insert into stock_ma_5_up_30 (stock_code, stock_name, industry_name, trade_date, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, zd, ma5, ma30, ma200)
+insert into stock_ma_5_up_30 (stock_code, stock_name, industry_name, trade_date, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, zd, ma5, ma30,
+                              ma200)
 
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
@@ -65,7 +66,8 @@ where 1 = 1
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma30
   and smaBefore.ma5 < smaBefore.ma30
-#   and smaBefore.ma30 < smaCurrent.ma30
+  and smaBefore.ma10 < smaCurrent.ma10
+  and smaBefore.ma20 < smaCurrent.ma20
 
 
   -- 今天交易
