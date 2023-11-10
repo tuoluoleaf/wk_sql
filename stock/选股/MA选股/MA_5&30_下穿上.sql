@@ -54,9 +54,9 @@ from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent,
      stock_base_info sbi
 where 1 = 1
-  and smaCurrent.trade_date = get_trade_day(current_date, -0)
-#   and smaCurrent.trade_date <= get_trade_day(current_date, -0)
-#   and smaCurrent.trade_date >= get_trade_day(current_date, -20)
+#   and smaCurrent.trade_date = get_trade_day(current_date, -0)
+  and smaCurrent.trade_date <= get_trade_day(current_date, -0)
+  and smaCurrent.trade_date >= get_trade_day(current_date, -20)
 #   and smaCurrent.trade_date >= date'2023-01-01'
 #   and smaCurrent.trade_date < date'2023-10-01'
   and smaBefore.stock_code = smaCurrent.stock_code
@@ -65,6 +65,7 @@ where 1 = 1
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma30
   and smaBefore.ma5 < smaBefore.ma30
+  and smaBefore.ma30 < smaCurrent.ma30
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
