@@ -65,6 +65,7 @@ where 1 = 1
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma30
   and smaBefore.ma5 < smaBefore.ma30
+#   and smaBefore.ma30 < smaCurrent.ma30
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
