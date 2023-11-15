@@ -13,3 +13,5 @@ group by trade_date
 order by trade_date desc
 ;
 
+
+
