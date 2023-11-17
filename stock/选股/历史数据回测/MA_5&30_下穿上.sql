@@ -8,14 +8,16 @@ with tmp as (
          stock_ma_dn smaBefore
     where t1.trade_date >= date'2023-01-01'
     and t1.trade_date < date'2023-11-01'
-    and t1.sum_max_zd >= 10
+#     and t1.sum_max_zd >= 15
     and ( t1.stock_code not like '300%' and t1.stock_code not like '688%')
     and smaCurrent.stock_code = t1.stock_code
     and smaCurrent.trade_date = t1.trade_date
     and smaBefore.stock_code = t1.stock_code
     and smaBefore.trade_date = get_trade_day(t1.trade_date, -1)
-    and smaBefore.ma30 < smaCurrent.ma30
+#     and smaBefore.ma30 < smaCurrent.ma30
 )
+
+
 
 
 select t1.yearMonth, t1.nums, t2.nums, round(t2.nums/(t1.nums), 2)
@@ -26,3 +28,32 @@ where t1.yearMonth  = t2.yearMonth
 order by t1.yearMonth
 ;
 
+
+
+-- 汇总问题
+# sum(t1.sum_max_zd)	avg(t1.sum_max_zd)	count(0)
+# 3898.950	12.2995268	317
+select sum(t1.sum_max_zd), avg(t1.sum_max_zd),count(0)
+from stock_ma_5_up_30 t1
+where t1.trade_date >= date'2023-01-01'
+  and t1.trade_date < date'2023-11-01'
+  and t1.sum_max_zd >= 10
+  and t1.sum_max_zd < 15;
+
+
+# sum(t1.sum_max_zd)	avg(t1.sum_max_zd)	count(0)
+# 13050.710	27.5331435	474
+select sum(t1.sum_max_zd), avg(t1.sum_max_zd), count(0)
+from stock_ma_5_up_30 t1
+where t1.trade_date >= date'2023-01-01'
+  and t1.trade_date < date'2023-11-01'
+  and t1.sum_max_zd >= 15;
+
+
+# sum(t1.sum_max_zd)	avg(t1.sum_max_zd)	count(0)
+# 9726.030	34.3675972	283
+select sum(t1.sum_max_zd), avg(t1.sum_max_zd), count(0)
+from stock_ma_5_up_30 t1
+where t1.trade_date >= date'2023-01-01'
+  and t1.trade_date < date'2023-11-01'
+  and t1.sum_max_zd >= 20;
