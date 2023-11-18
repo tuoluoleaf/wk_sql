@@ -7,9 +7,9 @@ with tmp as (
          stock_ma_dn smaCurrent,
          stock_ma_dn smaBefore
     where t1.trade_date >= date'2023-01-01'
-    and t1.trade_date < date'2023-11-01'
-#     and t1.sum_max_zd >= 15
-    and ( t1.stock_code not like '300%' and t1.stock_code not like '688%')
+    and t1.trade_date < date'2023-02-01'
+    and t1.sum_max_zd >= 10
+    and t1.sum_max_zd < 20
     and smaCurrent.stock_code = t1.stock_code
     and smaCurrent.trade_date = t1.trade_date
     and smaBefore.stock_code = t1.stock_code
