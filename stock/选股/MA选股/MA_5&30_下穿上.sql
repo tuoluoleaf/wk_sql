@@ -1,5 +1,5 @@
 -- MA_5&30_下穿上
-insert into stock_ma_5_up_30 (stock_code, stock_name, industry_name, trade_date, zd, close_price, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date,  ma5, ma30)
+# insert into stock_ma_5_up_30 (stock_code, stock_name, industry_name, trade_date, zd, close_price, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date,  ma5, ma30)
 
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
