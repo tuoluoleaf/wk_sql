@@ -53,8 +53,8 @@ where 1 = 1
   and smaCurrent.trade_date = get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date <= get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date >= get_trade_day(current_date, -6)
-#   and smaCurrent.trade_date >= date'2023-01-01'
-#   and smaCurrent.trade_date < date'2023-10-01'
+#   and smaCurrent.trade_date >= date'2023-11-01'
+#   and smaCurrent.trade_date < date'2023-12-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
@@ -69,7 +69,7 @@ where 1 = 1
   and tradeCurrent.zd > -1
   and tradeCurrent.zd < 11
   and tradeCurrent.close_price >= tradeCurrent.open_price
-  and tradeCurrent.close_price >= 10
+#   and tradeCurrent.close_price >= 10
   and tradeCurrent.trade_num >= 30000
   -- 市值 [50亿，300亿]
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 50

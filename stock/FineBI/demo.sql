@@ -1,25 +1,15 @@
-
-
 -- 股票交易
-select slu.stock_code,
-       slu.stock_name,
-       slu.industry_name,
-       slu.nums,
-       slu.pj,
-       slu.order_num,
-       std.trade_date,
-       std.zd,
-       std.close_price,
-       std.trade_num,
-       (select count(0)
-        from stock_trade_dn std2
-        where std2.stock_code = slu.stock_code
-          and std2.trade_date = get_trade_day(current_date, 0)
-          and std2.close_price >= 9
-          and std2.trade_num >= 50000) as xuanzhe
-from stock_trade_dn std,
-     stock_lead_up slu
-where slu.stock_code = std.stock_code
-  and std.trade_date <= get_trade_day(current_date, 0)
-  and std.trade_date >= get_trade_day(current_date, -365)
-order by slu.industry_name, slu.order_num, trade_date desc
+select base.stock_code,
+       base.stock_name,
+       base.industry_name,
+       trade.trade_date,
+       trade.close_price,
+       trade.zd
+from stock_trade_dn trade,
+     stock_base_info base
+where trade.trade_date >= date'2023-10-01'
+and trade.trade_date <= date'2023-12-01'
+and trade.stock_code = base.stock_code
+and base.industry_name = '燃气'
+order by trade.stock_code, trade.trade_date desc
+;
