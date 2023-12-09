@@ -1,5 +1,5 @@
 # -- MA_5&30_下穿上
-insert into fund_ma_5_up_30 (fund_code, fund_name, trade_date, zd, close_price, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, ma5, ma30)
+# insert into fund_ma_5_up_30 (fund_code, fund_name, trade_date, zd, close_price, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, ma5, ma30)
 
 select smaCurrent.fund_code,
        smaCurrent.fund_name,
@@ -46,7 +46,7 @@ from fund_ma_dn smaCurrent,
      fund_ma_dn smaBefore,
      fund_trade_dn tradeCurrent
 where 1 = 1
-  and smaCurrent.trade_date = get_trade_day(current_date, -1)
+  and smaCurrent.trade_date = get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date >= get_trade_day(current_date, -6)
 #   and smaCurrent.trade_date >= date'2023-01-01'
 #   and smaCurrent.trade_date < date'2024-01-01'
@@ -64,7 +64,7 @@ where 1 = 1
   and tradeCurrent.zd < 11
 #   and tradeCurrent.close_price >= tradeCurrent.open_price
   and tradeCurrent.close_price < 50
-  and tradeCurrent.trade_num >= 3000000
+  and tradeCurrent.trade_num >= 3*10000*100
 -- 市值 [50亿，300亿]
 order by smaCurrent.trade_date desc
 ;
