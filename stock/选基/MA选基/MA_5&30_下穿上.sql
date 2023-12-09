@@ -1,7 +1,7 @@
 # -- MA_5&30_下穿上
 # insert into fund_ma_5_up_30 (fund_code, fund_name, trade_date, zd, close_price, sum_max_zd, highest_price_date, sum_min_zd, lowest_price_date, ma5, ma30)
 
-select smaCurrent.fund_code,
+select replace(replace(smaCurrent.fund_code, 'sh', ''),'sz', '') as fund_code,
        smaCurrent.fund_name,
        smaCurrent.trade_date,
        tradeCurrent.zd,
