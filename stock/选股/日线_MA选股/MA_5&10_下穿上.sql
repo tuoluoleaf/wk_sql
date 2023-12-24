@@ -49,7 +49,7 @@ from stock_ma_dn smaCurrent,
 where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
-  and smaCurrent.trade_date = get_trade_day(current_date, -0)
+  and smaCurrent.trade_date = get_trade_day(current_date, -1)
 #   and smaCurrent.trade_date <= get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date >= get_trade_day(current_date, -6)
 #   and smaCurrent.trade_date >= date'2023-11-01'
