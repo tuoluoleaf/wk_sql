@@ -34,8 +34,8 @@ create table industry_category
 create table stock_industry_trade_dn
 (
     id            bigint primary key auto_increment comment '主键id',
-    industry_code    varchar(10) comment '行业代码',
-    industry_name   varchar(20) comment '行业名称',
+    industry_code varchar(10) comment '行业代码',
+    industry_name varchar(20) comment '行业名称',
     trade_date    date comment '交易日期',
     open_price    decimal(16, 2) comment '开盘价[元]',
     close_price   decimal(16, 2) comment '收盘价[元]',
@@ -163,62 +163,12 @@ create table stock_ma_60m
 create index idx_stock_ma_60 on stock_ma_60m (stock_code, trade_date_time);
 create index idx_stock_ma_60_date on stock_ma_60m (trade_date_time);
 
-
--- MA_5&20_下穿上
-create table stock_ma_5_up_20
-(
-    id                 bigint primary key auto_increment comment '主键id',
-    stock_code         varchar(10) comment '股票代码',
-    stock_name         varchar(20) comment '股票名称',
-    industry_name      varchar(20) comment '行业名称',
-    trade_date         date comment '交易日期',
-    sum_max_zd         decimal(16, 3) comment 'sum_max_zd',
-    highest_price_date date comment 'highest_price_date',
-    sum_min_zd         decimal(16, 3) comment 'ma5',
-    lowest_price_date  date comment 'lowest_price_date',
-    zd                 decimal(16, 3) comment 'zd',
-    ma5                decimal(16, 3) comment 'ma5',
-    ma20               decimal(16, 3) comment 'ma20',
-    ma200              decimal(16, 3) comment 'ma200',
-
-    create_by          varchar(64) default 'sys'                                         null comment '创建者',
-    create_time        datetime    default current_timestamp                             null comment '创建时间',
-    update_by          varchar(64) default 'sys'                                         null comment '更新者',
-    update_time        datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark             varchar(500)                                                      null comment '备注'
-) comment 'MA_5&20_下穿上';
-
-
-
--- MA_10&20_下穿上
-create table stock_ma_10_up_20
-(
-    id                 bigint primary key auto_increment comment '主键id',
-    stock_code         varchar(10) comment '股票代码',
-    stock_name         varchar(20) comment '股票名称',
-    industry_name      varchar(20) comment '行业名称',
-    trade_date         date comment '交易日期',
-    sum_max_zd         decimal(16, 3) comment 'sum_max_zd',
-    highest_price_date date comment 'highest_price_date',
-    sum_min_zd         decimal(16, 3) comment 'ma5',
-    lowest_price_date  date comment 'lowest_price_date',
-    zd                 decimal(16, 3) comment 'zd',
-    ma10               decimal(16, 3) comment 'ma10',
-    ma20               decimal(16, 3) comment 'ma20',
-
-    create_by          varchar(64) default 'sys'                                         null comment '创建者',
-    create_time        datetime    default current_timestamp                             null comment '创建时间',
-    update_by          varchar(64) default 'sys'                                         null comment '更新者',
-    update_time        datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark             varchar(500)                                                      null comment '备注'
-) comment 'MA_10&20_下穿上';
-
--- 指标MA_DN
-create table stock_ma_index
+-- 股票MA_WN
+create table stock_ma_wn
 (
     id          bigint primary key auto_increment comment '主键id',
-    index_code  varchar(10) comment '指标代码',
-    index_name  varchar(20) comment '指标名称',
+    stock_code  varchar(10) comment '股票代码',
+    stock_name  varchar(20) comment '股票名称',
     trade_date  date comment '交易日期',
     ma3         decimal(16, 3) comment 'ma3',
     ma5         decimal(16, 3) comment 'ma5',
@@ -229,5 +179,32 @@ create table stock_ma_index
     ma60        decimal(16, 3) comment 'ma60',
     ma120       decimal(16, 3) comment 'ma120',
     ma200       decimal(16, 3) comment 'ma200',
-    ma250       decimal(16, 3) comment 'ma250'
+    ma250       decimal(16, 3) comment 'ma250',
+
+    create_by   varchar(64) default 'sys'                                         null comment '创建者',
+    create_time datetime    default current_timestamp                             null comment '创建时间',
+    update_by   varchar(64) default 'sys'                                         null comment '更新者',
+    update_time datetime    default current_timestamp on update current_timestamp null comment '更新时间',
+    remark      varchar(500)                                                      null comment '备注'
+) comment '股票MA_WN';
+create unique index idx_stock_ma_wn on stock_ma_wn (stock_code, trade_date);
+create index idx_stock_ma_wn_date on stock_ma_wn (trade_date);
+
+-- 指标MA_DN
+create table stock_ma_index
+(
+    id         bigint primary key auto_increment comment '主键id',
+    index_code varchar(10) comment '指标代码',
+    index_name varchar(20) comment '指标名称',
+    trade_date date comment '交易日期',
+    ma3        decimal(16, 3) comment 'ma3',
+    ma5        decimal(16, 3) comment 'ma5',
+    ma10       decimal(16, 3) comment 'maa10',
+    ma15       decimal(16, 3) comment 'ma15',
+    ma20       decimal(16, 3) comment 'ma20',
+    ma30       decimal(16, 3) comment 'ma30',
+    ma60       decimal(16, 3) comment 'ma60',
+    ma120      decimal(16, 3) comment 'ma120',
+    ma200      decimal(16, 3) comment 'ma200',
+    ma250      decimal(16, 3) comment 'ma250'
 ) comment '指标MA_DN';

@@ -19,8 +19,8 @@ create unique index idx_fund_base_info on fund_base_info (fund_code);
 create table fund_trade_dn
 (
     id            bigint primary key auto_increment comment '主键id',
-    fund_code    varchar(10) comment '基金代码',
-    fund_name    varchar(20) comment '基金名称',
+    fund_code     varchar(10) comment '基金代码',
+    fund_name     varchar(20) comment '基金名称',
     trade_date    date comment '交易日期',
     open_price    decimal(16, 2) comment '开盘价[元]',
     close_price   decimal(16, 2) comment '收盘价[元]',
@@ -46,8 +46,8 @@ create index idx_fund_trade_dn_date on fund_trade_dn (trade_date);
 create table fund_ma_dn
 (
     id          bigint primary key auto_increment comment '主键id',
-    fund_code  varchar(10) comment '基金代码',
-    fund_name  varchar(20) comment '基金名称',
+    fund_code   varchar(10) comment '基金代码',
+    fund_name   varchar(20) comment '基金名称',
     trade_date  date comment '交易日期',
     ma3         decimal(16, 3) comment 'ma3',
     ma5         decimal(16, 3) comment 'ma5',
@@ -68,31 +68,3 @@ create table fund_ma_dn
 ) comment '基金MA_dn';
 create unique index idx_fund_ma_dn on fund_ma_dn (fund_code, trade_date);
 create index idx_fund_ma_dn_date on fund_ma_dn (trade_date);
-
-
--- auto-generated definition
-create table fund_ma_5_up_30
-(
-    id                 bigint auto_increment comment '主键id'
-        primary key,
-    fund_code         varchar(10)                           null comment '基金代码',
-    fund_name         varchar(20)                           null comment '基金名称',
-    trade_date         date                                  null comment '交易日期',
-    zd                 decimal(16, 3)                        null comment 'zd',
-    close_price        decimal(16, 3)                        null comment '收盘价',
-    sum_max_zd         decimal(16, 3)                        null comment 'sum_max_zd',
-    highest_price_date date                                  null comment 'highest_price_date',
-    sum_min_zd         decimal(16, 3)                        null comment 'sum_min_zd',
-    lowest_price_date  date                                  null comment 'lowest_price_date',
-    ma5                decimal(16, 3)                        null comment 'ma5',
-    ma30               decimal(16, 3)                        null comment 'ma30',
-
-    create_by          varchar(64) default 'sys'             null comment '创建者',
-    create_time        datetime    default CURRENT_TIMESTAMP null comment '创建时间',
-    update_by          varchar(64) default 'sys'             null comment '更新者',
-    update_time        datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    remark             varchar(500)                          null comment '备注'
-)
-    comment 'MA_5&30_下穿上';
-
-drop table fund_ma_5_up_30;
