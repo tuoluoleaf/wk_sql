@@ -18,8 +18,8 @@ where 1 = 1
 #   and smaCurrent.trade_date = get_trade_day(current_date, -1)
 #   and smaCurrent.trade_date <= get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date >= get_trade_day(current_date, -6)
-  and smaCurrent.trade_date >= date'2023-11-01'
-  and smaCurrent.trade_date < date'2024-01-01'
+  and smaCurrent.trade_date >= date'2024-01-01'
+  and smaCurrent.trade_date < date'2025-01-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = (select max(t1.trade_date)
                               from stock_ma_wn t1
