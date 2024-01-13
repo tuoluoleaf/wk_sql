@@ -20,6 +20,7 @@ group by trade_date
 order by trade_date desc
 ;
 
+delete from stock_ma_wn where trade_date = date'2024-01-03';
 
 
 
