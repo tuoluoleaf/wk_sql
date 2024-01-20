@@ -20,7 +20,8 @@ group by trade_date
 order by trade_date desc
 ;
 
-delete from stock_ma_wn where trade_date = date'';
+delete from stock_ma_wn where trade_date = date'2024-01-15';
+delete from stock_ma_wn where trade_date >= date'2024-01-15' and trade_date <= date'2024-01-18';
 
 
 -- 基金交易数据
