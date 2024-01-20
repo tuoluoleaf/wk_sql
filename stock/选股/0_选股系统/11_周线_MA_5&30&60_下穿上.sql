@@ -4,10 +4,23 @@ select smaCurrent.stock_code,
        sbi.industry_name,
        smaCurrent.trade_date,
        tradeCurrent.zd,
+       round(((select max(t2.highest_price)
+               from stock_trade_dn t2
+               where t2.stock_code = smaCurrent.stock_code
+                 and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+                 and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 365))
+           - tradeCurrent.open_price) / tradeCurrent.open_price * 100, 2) as highestZd,
+       round(((select min(t2.highest_price)
+               from stock_trade_dn t2
+               where t2.stock_code = smaCurrent.stock_code
+                 and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
+                 and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 365))
+           - tradeCurrent.open_price) / tradeCurrent.open_price * 100, 2) as lowestZd,
        tradeCurrent.close_price,
        smaCurrent.ma5,
        smaCurrent.ma10,
-       smaCurrent.ma30
+       smaCurrent.ma30,
+       smaCurrent.ma60
 from stock_ma_wn smaCurrent,
      stock_ma_wn smaBefore,
      stock_trade_dn tradeCurrent,
@@ -15,8 +28,8 @@ from stock_ma_wn smaCurrent,
 where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
-  and smaCurrent.trade_date >= date'2024-01-01'
-  and smaCurrent.trade_date < date'2025-01-01'
+  and smaCurrent.trade_date >= date'2020-01-01'
+  and smaCurrent.trade_date < date'2021-01-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = (select max(t1.trade_date)
                               from stock_ma_wn t1
@@ -25,6 +38,7 @@ where 1 = 1
 
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma30
+  and smaCurrent.ma30 >= smaCurrent.ma60
   and smaBefore.ma5 < smaBefore.ma30
 
   -- 今天交易
