@@ -1,3 +1,4 @@
+# drop function get_trade_day;
 -- 工作日函数
 DELIMITER $$
 create function get_trade_day(base_date date, n int) returns date
@@ -12,13 +13,14 @@ BEGIN
     select trade_day
     into t_n
     from stock_trade_day
-    where id = (select id from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
+    where num = (select num from stock_trade_day t1 where t1.trade_day = max_trade_day) + n;
 
     return t_n;
 end $$
 DELIMITER ;
 
-drop function get_trade_60m;
+
+# drop function get_trade_60m;
 -- 60m函数
 DELIMITER $$
 create function get_trade_60m(base_60m timestamp, n int) returns timestamp
