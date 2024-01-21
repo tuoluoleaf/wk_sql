@@ -9,13 +9,13 @@ select smaCurrent.stock_code,
                where t2.stock_code = smaCurrent.stock_code
                  and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
                  and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 365))
-           - tradeCurrent.open_price) / tradeCurrent.open_price * 100, 2) as highestZd,
-       round(((select min(t2.highest_price)
+           - tradeCurrent.close_price) / tradeCurrent.close_price * 100, 2) as highestZd,
+       round(((select min(t2.lowest_price)
                from stock_trade_dn t2
                where t2.stock_code = smaCurrent.stock_code
                  and t2.trade_date >= get_trade_day(smaCurrent.trade_date, 1)
                  and t2.trade_date <= get_trade_day(smaCurrent.trade_date, 365))
-           - tradeCurrent.open_price) / tradeCurrent.open_price * 100, 2) as lowestZd,
+           - tradeCurrent.close_price) / tradeCurrent.close_price * 100, 2) as lowestZd,
        tradeCurrent.close_price,
        smaCurrent.ma5,
        smaCurrent.ma10,
