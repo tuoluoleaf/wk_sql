@@ -24,26 +24,25 @@ from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent,
      stock_base_info sbi
 where 1 = 1
-#   and smaCurrent.trade_date = get_trade_day(current_date, -40)
+  and smaCurrent.trade_date = get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date <= get_trade_day(current_date, -0)
 #   and smaCurrent.trade_date >= get_trade_day(current_date, -20)
-  and smaCurrent.trade_date >= date'2024-01-01'
-  and smaCurrent.trade_date < date'2025-02-01'
+#   and smaCurrent.trade_date >= date'2024-01-01'
+#   and smaCurrent.trade_date < date'2024-02-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
   -- ma
   and smaCurrent.ma5 >= smaCurrent.ma30
-  and smaCurrent.ma30 >= smaBefore.ma60
+  and smaCurrent.ma30 < smaBefore.ma60
   and smaBefore.ma5 < smaBefore.ma30
 
 
   -- 今天交易
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
-  and tradeCurrent.zd > -1
+  and tradeCurrent.zd > -2
   and tradeCurrent.zd < 11
-  and tradeCurrent.close_price >= tradeCurrent.open_price
 #   and tradeCurrent.close_price >= 10
   and tradeCurrent.trade_num >= 3 * 10000
   -- 市值 [50亿，200亿]
