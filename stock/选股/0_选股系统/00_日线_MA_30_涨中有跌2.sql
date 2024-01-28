@@ -32,8 +32,8 @@ from (select t1.*,
               and (smaCurrent.stock_code not like '30%'
                 and smaCurrent.stock_code not like '688%')
 #         and smaCurrent.trade_date = get_trade_day(current_date, -2)
-              and smaCurrent.trade_date >= date'2021-01-01'
-              and smaCurrent.trade_date < date'2024-01-01'
+              and smaCurrent.trade_date >= date'2024-01-01'
+              and smaCurrent.trade_date < date'2025-01-01'
               and smaBefore.stock_code = smaCurrent.stock_code
               and tradeCurrent.stock_code = smaCurrent.stock_code
               and tradeBefore.stock_code = tradeCurrent.stock_code
