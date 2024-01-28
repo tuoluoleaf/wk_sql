@@ -1,4 +1,4 @@
--- MA_30
+-- MA_30 止损点2%
 select *
 from (select t1.*,
              (select round((max(a1.close_price) - t1.close_price) / t1.close_price * 100, 2)
@@ -46,7 +46,6 @@ from (select t1.*,
               and tradeBefore.open_price > smaBefore.ma30
               and tradeBefore.close_price > smaBefore.ma30
               and (tradeCurrent.open_price + (tradeCurrent.close_price - tradeCurrent.open_price) * 0.4) > smaCurrent.ma5
-#         and (tradeCurrent.open_price + (tradeCurrent.close_price - tradeCurrent.open_price) * 0.4) > smaCurrent.ma5
               and tradeCurrent.close_price > tradeCurrent.open_price
               and tradeCurrent.close_price > smaCurrent.ma5
               and tradeCurrent.close_price < smaCurrent.ma30 * 1.05
@@ -54,8 +53,8 @@ from (select t1.*,
 
               -- 今天交易
               and tradeCurrent.trade_num >= 3 * 10000
-#                        and tradeCurrent.zd >= 0.91
-#                        and tradeCurrent.zd < 1.1
+#               and tradeCurrent.zd >= 0.91
+#               and tradeCurrent.zd < 1.1
               -- 市值 [50亿，300亿]
               and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 50
               and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 100000000 * 300
