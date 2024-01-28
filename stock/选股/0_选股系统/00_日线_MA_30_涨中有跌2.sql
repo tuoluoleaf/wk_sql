@@ -61,7 +61,7 @@ from (select t1.*,
 
               -- 行业
               and sbi.stock_code = smaCurrent.stock_code) t1) t2
-where t2.stop_zd < 30
+# where t2.stop_zd < 30
 order by trade_date desc, industry_name desc
 ;
 
