@@ -21,7 +21,7 @@ where 1 = 1
 -- ma
   and (tradeCurrent.open_price + tradeCurrent.close_price) / 2 > smaCurrent.ma200
   and (tradeBefore.open_price + tradeBefore.close_price) / 2 < smaBefore.ma200
-  and smaCurrent.ma200 < smaBefore.ma200
+  and smaCurrent.ma200 > smaBefore.ma200
 
 -- 昨天交易
   and tradeBefore.stock_code = smaCurrent.stock_code

@@ -42,8 +42,8 @@ from (select t1.*,
               and (smaCurrent.stock_code not like '30%'
                 and smaCurrent.stock_code not like '688%')
 #         and smaCurrent.trade_date = get_trade_day(current_date, -2)
-              and smaCurrent.trade_date >= date'2024-01-01'
-              and smaCurrent.trade_date < date'2025-01-01'
+              and smaCurrent.trade_date >= date'2023-01-01'
+              and smaCurrent.trade_date < date'2024-01-01'
               and smaBefore.stock_code = smaCurrent.stock_code
               and tradeCurrent.stock_code = smaCurrent.stock_code
               and tradeBefore.stock_code = tradeCurrent.stock_code
@@ -55,11 +55,14 @@ from (select t1.*,
               and (tradeBefore.open_price + tradeBefore.close_price) / 2 < smaBefore.ma5
               and tradeBefore.open_price > smaBefore.ma30
               and tradeBefore.close_price > smaBefore.ma30
+              and smaBefore.ma30 > smaBefore.ma200
               and (tradeCurrent.open_price + (tradeCurrent.close_price - tradeCurrent.open_price) * 0.4) > smaCurrent.ma5
               and tradeCurrent.close_price > tradeCurrent.open_price
               and tradeCurrent.close_price > smaCurrent.ma5
               and tradeCurrent.close_price < smaCurrent.ma30 * 1.05
               and tradeCurrent.close_price > smaCurrent.ma30
+              and smaCurrent.ma30 > smaCurrent.ma200
+
 
               -- 今天交易
               and tradeCurrent.trade_num >= 3 * 10000
