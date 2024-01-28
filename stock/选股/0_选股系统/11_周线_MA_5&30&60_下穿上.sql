@@ -28,8 +28,8 @@ from stock_ma_wn smaCurrent,
 where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
-  and smaCurrent.trade_date >= date'2024-01-01'
-  and smaCurrent.trade_date < date'2025-01-01'
+  and smaCurrent.trade_date >= date'2023-01-01'
+  and smaCurrent.trade_date < date'2024-01-01'
   and smaBefore.stock_code = smaCurrent.stock_code
   and smaBefore.trade_date = (select max(t1.trade_date)
                               from stock_ma_wn t1
