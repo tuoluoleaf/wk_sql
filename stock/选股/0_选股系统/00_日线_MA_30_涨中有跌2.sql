@@ -32,7 +32,7 @@ from (select t1.*,
                       and tradeCurrent2.trade_date = smaCurrent2.trade_date
                       and (tradeCurrent2.open_price + tradeCurrent2.close_price) / 2 < smaCurrent2.ma5) as stop_trade_date,
                    round((tradeCurrent.close_price - smaBefore.ma30) / smaBefore.ma30 * 100, 2)         as pl_ma30
-            from  stock_trade_dn tradeCurrent,
+            from stock_trade_dn tradeCurrent,
                  stock_trade_dn tradeBefore,
                  stock_ma_dn smaBefore,
                  stock_base_info sbi
@@ -40,7 +40,7 @@ from (select t1.*,
               -- 排除：创业板、科创板
               and (tradeCurrent.stock_code not like '30%' and tradeCurrent.stock_code not like '688%')
               -- and tradeCurrent.trade_date = get_trade_day(current_date, -2)
-              and tradeCurrent.trade_date >= date'2024-01-01'
+              and tradeCurrent.trade_date >= date'2023-11-01'
               and tradeCurrent.trade_date < date'2025-01-01'
               and tradeBefore.stock_code = tradeCurrent.stock_code
               and smaBefore.stock_code = tradeCurrent.stock_code
@@ -53,9 +53,8 @@ from (select t1.*,
               and tradeBefore.open_price > smaBefore.ma30
               and tradeBefore.close_price > smaBefore.ma30
               and smaBefore.ma30 > smaBefore.ma200
-              and (tradeCurrent.open_price + (tradeCurrent.close_price - tradeCurrent.open_price) * 0.4) > smaBefore.ma5
+              and (tradeCurrent.open_price + tradeCurrent.close_price) / 2 > smaBefore.ma5
               and tradeCurrent.close_price > tradeCurrent.open_price
-              and tradeCurrent.close_price > smaBefore.ma5
               and tradeCurrent.close_price < smaBefore.ma30 * 1.05
               and tradeCurrent.close_price > smaBefore.ma30
 

@@ -22,6 +22,7 @@ where 1 = 1
   and tradeCurrent.close_price > smaCurrent.ma30
   and tradeCurrent.open_price < smaCurrent.ma5
   and tradeCurrent.close_price < smaCurrent.ma5
+  and smaCurrent.ma30 > smaCurrent.ma200
 
   -- 今天交易
   and tradeCurrent.trade_num >= 3 * 10000
