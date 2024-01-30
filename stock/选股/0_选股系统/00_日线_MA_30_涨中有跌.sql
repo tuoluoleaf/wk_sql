@@ -26,9 +26,9 @@ where 1 = 1
 
   -- 今天交易
   and tradeCurrent.trade_num >= 3 * 10000
-  -- 市值 [50亿，300亿]
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 50
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 100000000 * 300
+  -- 市值 [100亿，300亿]
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
+#   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 100000000 * 300
 
 -- 行业
   and sbi.stock_code = smaCurrent.stock_code
