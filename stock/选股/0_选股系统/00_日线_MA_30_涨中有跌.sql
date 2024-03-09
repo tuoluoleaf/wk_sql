@@ -17,21 +17,20 @@ where 1 = 1
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
 
-  -- ma && 价格
+  -- ma5趋势
   and tradeCurrent.open_price < smaCurrent.ma5
   and tradeCurrent.close_price < smaCurrent.ma5
   and tradeCurrent.close_price > smaCurrent.ma200
   and smaCurrent.ma5 > smaCurrent.ma200
 
-
-  -- 今天交易
+  -- 成交量3W以上
   and tradeCurrent.trade_num >= 3 * 10000
-  -- 市值 [100亿，300亿]
+  -- 市值100亿以上
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
-#   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) <= 100000000 * 300
-
--- 行业
+  -- 行业
   and sbi.stock_code = smaCurrent.stock_code
+  and sbi.industry_name not in ('银行类', '券商类', '保险类')
+
 order by smaCurrent.trade_date desc, sbi.industry_name desc
 ;
 
