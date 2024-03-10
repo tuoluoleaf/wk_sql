@@ -25,11 +25,11 @@ where 1 = 1
 
   -- 成交量3W以上
   and tradeCurrent.trade_num >= 3 * 10000
-  -- 市值100亿以上
+  -- 市值【100亿,...）
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
   -- 行业
   and sbi.stock_code = smaCurrent.stock_code
-  and sbi.industry_name not in ('银行类', '券商类', '保险类')
+  and sbi.industry_name not in ('银行类', '券商类', '保险类', '酒类', '煤炭')
 
 order by smaCurrent.trade_date desc, sbi.industry_name desc
 ;
