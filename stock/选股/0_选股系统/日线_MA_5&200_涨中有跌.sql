@@ -28,11 +28,7 @@ where 1 = 1
   -- 市值[100亿, 1000亿)
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) < 100000000 * 1000
-  -- 行业
-  and sbi.stock_code = smaCurrent.stock_code
-  and sbi.industry_name not in ('银行类', '券商类', '保险类', '酒类', '煤炭',
-                                '钢铁类', '化肥类', '造纸印刷', '纺织服饰', '房地产开发',
-                               '公用事业', '珠宝首饰', '装修建材')
+
 
 order by smaCurrent.trade_date desc, sbi.industry_name desc
 ;
