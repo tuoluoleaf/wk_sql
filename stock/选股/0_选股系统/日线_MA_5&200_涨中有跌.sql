@@ -25,6 +25,8 @@ where 1 = 1
   and tradeCurrent.trade_num >= 3 * 10000
   -- 股价10以上
   and tradeCurrent.close_price >= 10
+  -- ma200附近25点
+  and tradeCurrent.close_price <= smaCurrent.ma200 * 1.25
   -- 市值[100亿, 1000亿)
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) < 100000000 * 1000
