@@ -10,18 +10,6 @@ create unique index idx_stock_trade_day on stock_trade_day (trade_day);
 
 -- 更新排序
 update stock_trade_day t
-set num = (select RN
-           from (select row_number() over (order by trade_day ) as RN,
-                        trade_day
-                 from stock_trade_day) tmp
-           where tmp.trade_day = t.trade_day);
+set num = (select RN from (select row_number() over (order by trade_day ) as RN, trade_day from stock_trade_day) tmp where tmp.trade_day = t.trade_day);
 
 
-
--- =============================== 非重要数据 ===============================================================================
--- 交易60m
-create table stock_trade_60m
-(
-    id        int primary key auto_increment comment '主键id',
-    trade_60m datetime comment '交易小时'
-);
