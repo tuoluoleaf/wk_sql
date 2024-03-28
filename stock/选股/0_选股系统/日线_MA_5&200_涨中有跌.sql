@@ -2,10 +2,13 @@
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
        smaCurrent.trade_date,
+       sbi.industry_name,
        tradeCurrent.zd,
-       smaCurrent.ma30
+       smaCurrent.ma5,
+       smaCurrent.ma200
 from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent
+     left join stock_base_info sbi on sbi.stock_code = tradeCurrent.stock_code
 where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
@@ -31,8 +34,7 @@ where 1 = 1
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) < 100000000 * 1000
 
-
-order by smaCurrent.trade_date desc
+order by smaCurrent.trade_date desc, sbi.industry_name
 ;
 
 
