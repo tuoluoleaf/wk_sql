@@ -1,8 +1,9 @@
+# INSERT INTO stock_result_1 (stock_code, stock_name, industry_name, trade_date, close_price, next_1_ma5, zd, next_1_zd, next_2_zd, next_3_zd, next_4_zd, next_5_zd, next_6_zd, next_7_zd, ma5, ma200)
 -- MA_30
 select smaCurrent.stock_code,
        smaCurrent.stock_name,
-       smaCurrent.trade_date,
        sbi.industry_name,
+       smaCurrent.trade_date,
        tradeCurrent.close_price,
        (select tmp.ma5 from stock_ma_dn tmp where tmp.stock_code = tradeCurrent.stock_code and tmp.trade_date = get_trade_day(tradeCurrent.trade_date, 1)) as next_1_ma5,
        tradeCurrent.zd,
