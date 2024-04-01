@@ -29,6 +29,7 @@ where 1 = 1
   and tradeCurrent.trade_date = smaCurrent.trade_date
 
   -- ma200附近35点
+  and tradeCurrent.close_price > smaCurrent.ma5
   and tradeCurrent.close_price > smaCurrent.ma200
   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
 

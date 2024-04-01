@@ -18,7 +18,7 @@ from (select t.stock_code,
       where t.close_price > t.next_1_ma5
         and t.next_1_zd >= 2.8
         # and t.zd < 5
-        and t.trade_date >= date'2024-03-01'
+        and t.trade_date = date'2024-03-29'
 
         and t2.stock_code = t.stock_code
         and t2.trade_date = get_trade_day(t.trade_date, 1)
