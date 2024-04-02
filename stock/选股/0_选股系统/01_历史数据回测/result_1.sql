@@ -16,12 +16,14 @@ from (select t.stock_code,
       from stock_result_1 t,
            stock_trade_dn t2
       where t.close_price > t.next_1_ma5
-        and t.next_1_zd >= 2.8
-        # and t.zd < 5
-        and t.trade_date = date'2024-03-29'
+        and t.next_1_zd >= 3
+        and t.next_1_zd < 7
+        and t.trade_date = date'2024-03-05'
 
         and t2.stock_code = t.stock_code
         and t2.trade_date = get_trade_day(t.trade_date, 1)
       order by t.trade_date desc, t.industry_name) tmp
 where rn = 1
 ;
+
+# truncate table stock_result_1;
