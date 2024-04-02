@@ -12,13 +12,14 @@ from (select t.stock_code,
              (t.next_2_zd + t.next_3_zd)                                           as 2_day,
              (t.next_2_zd + t.next_3_zd + t.next_4_zd)                             as 3_day,
              (t.next_2_zd + t.next_3_zd + t.next_4_zd + t.next_5_zd + t.next_6_zd) as 5_day,
+             round((t.close_price - t.ma200)/t.ma200,2) as zb,
              row_number() over (partition by t.stock_code order by t.trade_date)      rn
       from stock_result_1 t,
            stock_trade_dn t2
       where t.close_price > t.next_1_ma5
         and t.next_1_zd >= 3
-        and t.next_1_zd < 7
-        and t.trade_date = date'2024-03-05'
+#         and t.next_1_zd < 7
+#         and t.trade_date = ådate'2024-03-05'
 
         and t2.stock_code = t.stock_code
         and t2.trade_date = get_trade_day(t.trade_date, 1)
