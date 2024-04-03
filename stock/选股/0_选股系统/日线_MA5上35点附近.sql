@@ -22,16 +22,16 @@ from stock_ma_dn smaCurrent,
 where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
-#   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-  and smaCurrent.trade_date >= date'2024-03-01'
-  and smaCurrent.trade_date < date'2025-01-01'
+  and smaCurrent.trade_date = get_trade_day(current_date, -20)
+#   and smaCurrent.trade_date >= date'2024-03-01'
+#   and smaCurrent.trade_date < date'2024-04-01'
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
 
   -- ma200附近35点
   and tradeCurrent.close_price > smaCurrent.ma5
-  and tradeCurrent.close_price > smaCurrent.ma200
-  and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
+  and tradeCurrent.close_price > smaCurrent.ma60
+#   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
 
   -- 成交量3W以上
   and tradeCurrent.trade_num >= 3 * 10000
