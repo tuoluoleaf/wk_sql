@@ -25,8 +25,8 @@ where 1 = 1
 
   -- ma5上
   and tradeCurrent.close_price > smaCurrent.ma5
-  -- ma200 [-0.25, +0.35]
-  and tradeCurrent.close_price > smaCurrent.ma200 * 0.75
+  -- ma200 [-0.35, +0.35]
+  and tradeCurrent.close_price > smaCurrent.ma200 * 0.65
   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
 
 
