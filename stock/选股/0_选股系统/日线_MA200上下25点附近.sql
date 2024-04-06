@@ -34,8 +34,8 @@ where 1 = 1
   and tradeCurrent.trade_num >= 3 * 10000
   -- 股价10以上
   and tradeCurrent.close_price >= 10
-  -- 市值[100亿, 1000亿)
-  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 100
+  -- 市值[80亿, 1000亿)
+  and (tradeCurrent.trade_money / tradeCurrent.hs * 100) >= 100000000 * 80
   and (tradeCurrent.trade_money / tradeCurrent.hs * 100) < 100000000 * 1000
 
 order by smaCurrent.trade_date desc, sbi.industry_name
