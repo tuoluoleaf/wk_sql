@@ -14,7 +14,7 @@ where 1 = 1
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
 #   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-  and smaCurrent.trade_date >= date'2024-03-01'
+  and smaCurrent.trade_date >= date'2024-04-01'
   and smaCurrent.trade_date < date'2025-01-01'
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
@@ -23,7 +23,7 @@ where 1 = 1
   and tradeCurrent.open_price < smaCurrent.ma5
   and tradeCurrent.close_price < smaCurrent.ma5
   -- ma200附近25点
-  and tradeCurrent.close_price > smaCurrent.ma200
+  and tradeCurrent.close_price >= smaCurrent.ma200 * 0.75
   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.25
   and smaCurrent.ma5 > smaCurrent.ma200
 
