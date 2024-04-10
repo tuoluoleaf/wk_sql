@@ -20,9 +20,9 @@ insert into stock_result_1 (stock_code, stock_name, trade_date, industry_name, c
        -- 排除：创业板、科创板
        and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
        and sbi.stock_code = tradeCurrent.stock_code
-       and smaCurrent.trade_date = get_trade_day(current_date, -2)
-#        and smaCurrent.trade_date >= date'2024-03-01'
-#        and smaCurrent.trade_date < date'2025-01-01'
+#        and smaCurrent.trade_date = get_trade_day(current_date, -2)
+       and smaCurrent.trade_date >= date'2024-03-01'
+       and smaCurrent.trade_date < date'2025-01-01'
        and tradeCurrent.stock_code = smaCurrent.stock_code
        and tradeCurrent.trade_date = smaCurrent.trade_date
        and smaBefore.stock_code = smaCurrent.stock_code
