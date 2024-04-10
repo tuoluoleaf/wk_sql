@@ -29,7 +29,7 @@ where 1 = 1
   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
 
   -- 成交量3W以上
-  and tradeCurrent.trade_num >= 3 * 10000
+#   and tradeCurrent.trade_num >= 3 * 10000
   -- 股价10以上
   and tradeCurrent.close_price >= 10
   -- 市值[50亿, 1000亿)
