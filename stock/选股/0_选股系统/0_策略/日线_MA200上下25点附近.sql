@@ -19,8 +19,8 @@ where 1 = 1
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
 
-  -- 涨幅[-5, 5]
-  and tradeCurrent.zd >= -5
+  -- 涨幅[3, 5]
+  and tradeCurrent.zd >= 3
   and tradeCurrent.zd <= 5
 
   -- ma5上
