@@ -5,24 +5,30 @@ select smaCurrent.stock_code,
        sbi.industry_name,
        tradeCurrent.close_price,
        tradeCurrent.zd,
-       smaCurrent.ma5,
-       smaCurrent.ma200
+       smaCurrent.ma5
 from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent,
+     stock_ma_dn smaBefore,
+     stock_trade_dn tradeBefore,
      stock_base_info sbi
 where 1 = 1
-  and sbi.stock_code = tradeCurrent.stock_code
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
+  and sbi.stock_code = tradeCurrent.stock_code
   and smaCurrent.trade_date = get_trade_day(current_date, -0)
-#   and smaCurrent.trade_date >= date'2024-04-09'
+#   and smaCurrent.trade_date >= date'2024-04-01'
 #   and smaCurrent.trade_date < date'2025-01-01'
   and tradeCurrent.stock_code = smaCurrent.stock_code
   and tradeCurrent.trade_date = smaCurrent.trade_date
+  and smaBefore.stock_code = smaCurrent.stock_code
+  and smaBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
+  and tradeBefore.stock_code = smaCurrent.stock_code
+  and tradeBefore.trade_date = get_trade_day(smaCurrent.trade_date, -1)
 
-  -- ma5趋势
-  and tradeCurrent.open_price < smaCurrent.ma5
-  and tradeCurrent.close_price < smaCurrent.ma5
+  -- MA5跳动
+  and (tradeBefore.close_price < smaBefore.ma5 or tradeBefore.open_price < smaBefore.ma5)
+  and tradeCurrent.close_price > smaCurrent.ma5
+  and tradeCurrent.open_price > smaCurrent.ma5
 
   -- MA200附近 [-0.25, +0.35]
   and tradeCurrent.close_price >= smaCurrent.ma200 * 0.75
