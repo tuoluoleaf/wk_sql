@@ -25,7 +25,6 @@ where 1 = 1
   -- ma200附近35点
   and tradeCurrent.close_price >= smaCurrent.ma200 * 0.75
   and tradeCurrent.close_price <= smaCurrent.ma200 * 1.35
-  and smaCurrent.ma5 > smaCurrent.ma200
 
   -- 成交量3W以上
   and tradeCurrent.trade_num >= 3 * 10000
