@@ -14,7 +14,7 @@ where 1 = 1
   and sbi.stock_code = tradeCurrent.stock_code
   -- 排除：创业板、科创板
   and (smaCurrent.stock_code not like '30%' and smaCurrent.stock_code not like '688%')
-  and smaCurrent.trade_date = get_trade_day(current_date, -3)
+  and smaCurrent.trade_date = get_trade_day(current_date, -1)
 #   and smaCurrent.trade_date >= date'2024-04-09'
 #   and smaCurrent.trade_date < date'2025-01-01'
   and tradeCurrent.stock_code = smaCurrent.stock_code
