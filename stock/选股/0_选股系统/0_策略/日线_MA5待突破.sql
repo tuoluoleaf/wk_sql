@@ -21,7 +21,6 @@ where 1 = 1
   and tradeCurrent.trade_date = smaCurrent.trade_date
 
   -- ma5趋势
-  and tradeCurrent.open_price < smaCurrent.ma5
   and tradeCurrent.close_price < smaCurrent.ma5
 
   -- MA200附近 [-10, +35]
