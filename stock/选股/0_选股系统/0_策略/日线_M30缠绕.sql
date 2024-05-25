@@ -5,7 +5,7 @@ select smaCurrent.stock_code,
        sbi.industry_name,
        tradeCurrent.close_price,
        tradeCurrent.zd,
-       smaCurrent.ma30
+       smaCurrent.ma10
 from stock_ma_dn smaCurrent,
      stock_trade_dn tradeCurrent,
      stock_base_info sbi
@@ -21,8 +21,8 @@ where 1 = 1
 
 
   -- ma30附近缠绕
-  and tradeCurrent.close_price >= smaCurrent.ma30
-  and tradeCurrent.close_price <= smaCurrent.ma30 * 1.1
+  and tradeCurrent.close_price >= smaCurrent.ma10
+  and tradeCurrent.close_price <= smaCurrent.ma10 * 1.1
 
   -- 成交量3W以上
   and tradeCurrent.trade_num >= 3 * 10000
