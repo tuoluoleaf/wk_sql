@@ -46,3 +46,4 @@ order by ma.trade_date desc, sbi.industry_name
 
 
 
+
