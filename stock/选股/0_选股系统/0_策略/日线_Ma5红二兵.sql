@@ -32,12 +32,11 @@ where 1 = 1
   -- 红
   and trade.close_price >= trade.open_price
 
-
-  -- 成交量3W以上
-  and trade.trade_num >= 3 * 10000
-  -- 股价10以上
+  -- 成交额1亿以上
+  and trade.trade_money >= 1 * 100000000
+  -- 股价8以上
   and trade.close_price >= 8
-  -- 市值[50亿, 1000亿)
+  -- 流通市值[50亿, 1000亿)
   and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
   and (trade.trade_money / trade.hs * 100) < 100000000 * 1000
 
