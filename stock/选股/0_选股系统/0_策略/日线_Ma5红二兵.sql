@@ -32,6 +32,7 @@ where 1 = 1
   -- 红
   and trade.close_price >= trade.open_price
 
+  and trade.zd <= 9
   -- 成交额1亿以上
   and trade.trade_money >= 1 * 100000000
   -- 股价8以上
