@@ -39,7 +39,7 @@ where 1 = 1
   and trade.close_price >= 8
   -- 流通市值[50亿, 1000亿)
   and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
-  and (trade.trade_money / trade.hs * 100) < 100000000 * 1000
+#   and (trade.trade_money / trade.hs * 100) < 100000000 * 1000
 
 order by ma.trade_date desc, sbi.industry_name
 ;
