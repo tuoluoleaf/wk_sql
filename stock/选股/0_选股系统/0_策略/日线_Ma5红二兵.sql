@@ -30,15 +30,15 @@ where 1 = 1
   and trade.close_price > ma.ma5
 
   -- 红
-  and trade.close_price >= trade.open_price
+#   and trade.close_price >= trade.open_price
 
-  and trade.zd <= 9
+#   and trade.zd <= 9
   -- 成交额1亿以上
   and trade.trade_money >= 1 * 100000000
   -- 股价8以上
-  and trade.close_price >= 8
+#   and trade.close_price >= 8
   -- 流通市值[50亿, 1000亿)
-  and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
+#   and (trade.trade_money / trade.hs * 100) >= 100000000 * 30
 #   and (trade.trade_money / trade.hs * 100) < 100000000 * 1000
 
 order by ma.trade_date desc, sbi.industry_name
