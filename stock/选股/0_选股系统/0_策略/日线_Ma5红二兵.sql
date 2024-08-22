@@ -30,8 +30,12 @@ where 1 = 1
 
   -- 红二兵
   and tradeB2.close_price < tradeB2.open_price
-  and tradeB1.close_price >= tradeB1.open_price
-  and trade.close_price >= trade.open_price
+  and tradeB1.close_price > tradeB1.open_price
+  and trade.close_price > trade.open_price
+  and tradeB2.zd < 0
+  and tradeB1.zd > 0
+  and trade.zd > 0
+
 
 
   -- ma5
