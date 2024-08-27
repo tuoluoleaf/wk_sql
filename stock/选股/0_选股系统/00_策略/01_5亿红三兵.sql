@@ -15,7 +15,7 @@ where 1 = 1
   -- 排除：创业板、科创板
   and (ma.stock_code not like '30%' and ma.stock_code not like '688%')
   and sbi.stock_code = trade.stock_code
-  and ma.trade_date = get_trade_day(current_date, -0)
+  and ma.trade_date = get_trade_day(current_date, -20)
 #   and ma.trade_date >= date'2024-06-01'
 #   and ma.trade_date < date'2025-07-01'
   and trade.stock_code = ma.stock_code
@@ -42,6 +42,9 @@ where 1 = 1
 
   -- ma5
   and (tradeB1.open_price <= maB1.ma5 or trade.open_price <= ma.ma5)
+
+  -- 市值[200亿, +)
+  and (trade.trade_money / trade.hs * 100) >= 100000000 * 200
 order by ma.trade_date desc, sbi.industry_name
 ;
 
