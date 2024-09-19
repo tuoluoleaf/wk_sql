@@ -11,7 +11,7 @@ where  (trade.stock_code not like '30%' and trade.stock_code not like '688%')
 
   -- 涨停
   and trade.zd > 9.7
-  -- 7亿量
+  -- 10亿量
   and trade.trade_money >= 10 * 100000000
   -- 市值[30亿, 1000亿)
   and (trade.trade_money / trade.hs * 100) >= 100000000 * 30
