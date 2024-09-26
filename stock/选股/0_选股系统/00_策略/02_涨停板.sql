@@ -16,9 +16,9 @@ where 1 = 1
   -- 涨停
   and trade.zd > 9.7
   -- 1亿量
-  and trade.trade_money >= 1 * 100000000
-  -- 市值[30亿, +)
-  and (trade.trade_money / trade.hs * 100) >= 100000000 * 30
+#   and trade.trade_money >= 1 * 100000000
+  -- 市值[20亿, +)
+  and (trade.trade_money / trade.hs * 100) >= 100000000 * 20
 order by trade.trade_date desc, sbi.industry_name
 ;
 
