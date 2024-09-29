@@ -5,13 +5,8 @@ create table stock_base_info
     stock_code    varchar(10) comment '股票代码',
     stock_name    varchar(20) comment '股票名称',
     market        varchar(10) comment '市场',
-    industry_name varchar(20) comment '行业名称',
-
-    create_by     varchar(64) default 'sys'                                         null comment '创建者',
-    create_time   datetime    default current_timestamp                             null comment '创建时间',
-    update_by     varchar(64) default 'sys'                                         null comment '更新者',
-    update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark        varchar(500)                                                      null comment '备注'
+    notion_name   varchar(2000) comment '所属概念',
+    industry_name varchar(500) comment '所属同花顺行业'
 ) comment '股票基本信息';
 create unique index idx_stock_base_info on stock_base_info (stock_code);
 
@@ -93,8 +88,6 @@ create table stock_ma_dn
 ) comment '股票MA_DN';
 create unique index idx_stock_ma_dn on stock_ma_dn (stock_code, trade_date);
 create index idx_stock_ma_dn_date on stock_ma_dn (trade_date);
-
-
 
 
 
