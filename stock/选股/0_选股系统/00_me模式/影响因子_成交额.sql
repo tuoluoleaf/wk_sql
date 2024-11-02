@@ -1,13 +1,13 @@
 select trade.trade_date,
        trade.stock_code,
        trade.stock_name,
-       round(trade.trade_money / 100000000, 0) as trade_money_亿
+       round(trade.trade_money / 100000000, 2) as trade_money_亿
 from stock_trade_dn trade
 where 1 = 1
   and (trade.stock_code not like '30%' and trade.stock_code not like '688%')
-#   and trade.trade_date = date'2024-08-19'
-  and trade.trade_date >= date'2024-07-01'
-  and trade.trade_date < date'2024-08-01'
+  and trade.trade_date = date'2024-08-06'
+#   and trade.trade_date >= date'2024-07-01'
+#   and trade.trade_date < date'2024-08-01'
 
   -- 10亿量
   and trade.trade_money >= 20 * 100000000
@@ -19,3 +19,13 @@ order by trade.trade_date desc, trade.trade_money desc
 ;
 
 
+select base.stock_code,
+       base.stock_name,
+       base.industry_name,
+       (select count(0) from stock_trade_dn t1 where t1.stock_code = base.stock_code and t1.trade_date >= date'2024-01-01' and t1.trade_date <= date'2024-12-01' and t1.trade_money >= 10 * 100000000)                                as count_sum,
+       (select round((max(highest_price) - min(lowest_price)) / min(lowest_price) * 100, 2) from stock_trade_dn t1 where t1.stock_code = base.stock_code and t1.trade_date >= date'2024-01-01' and t1.trade_date <= date'2024-12-01') as max_zd
+from stock_base_info base
+where (base.stock_code not like '30%' and base.stock_code not like '688%')
+  and base.lt_market_value >= 50
+  and base.lt_market_value < 700
+;
