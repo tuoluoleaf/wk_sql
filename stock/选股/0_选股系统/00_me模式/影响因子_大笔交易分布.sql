@@ -6,8 +6,8 @@ select trade_date,
        count_sell,
        count_buy / count_sum  as buy_rate,
        count_sell / count_sum as sell_rate,
-       zr_zd,
-       jr_zd
+       jr_zd,
+       zr_zd
 from (select tmp.trade_date,
              tmp.stock_code,
              tmp.stock_name,
