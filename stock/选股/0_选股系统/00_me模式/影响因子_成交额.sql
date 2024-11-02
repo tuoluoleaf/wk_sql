@@ -22,6 +22,7 @@ order by trade.trade_date desc, trade.trade_money desc
 select base.stock_code,
        base.stock_name,
        base.industry_name,
+       base.lt_market_value,
        (select count(0) from stock_trade_dn t1 where t1.stock_code = base.stock_code and t1.trade_date >= date'2024-01-01' and t1.trade_date <= date'2024-12-01' and t1.trade_money >= 10 * 100000000)                                as count_sum,
        (select round((max(highest_price) - min(lowest_price)) / min(lowest_price) * 100, 2) from stock_trade_dn t1 where t1.stock_code = base.stock_code and t1.trade_date >= date'2024-01-01' and t1.trade_date <= date'2024-12-01') as max_zd
 from stock_base_info base

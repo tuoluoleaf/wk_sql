@@ -22,7 +22,4 @@ group by trade_date
 order by trade_date desc;
 
 
--- 更新最新流动市值
-update stock_base_info base
-set base.lt_market_value = (select round(trade.trade_money / trade.hs * 100 / 100000000, 2) from stock_trade_dn trade where trade.stock_code = base.stock_code and trade.trade_date = current_date)
 
