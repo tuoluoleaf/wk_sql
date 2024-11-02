@@ -25,15 +25,15 @@ from (select tmp.trade_date,
             where 1 = 1
               and (stock.stock_code not like '30%' and stock.stock_code not like '688%')
               and stock.stock_code = detail.stock_code
-              and stock.lt_market_value <= 700
+              and stock.lt_market_value <= 800
               and detail.trade_date >= get_trade_day(current_date, -10)
               and detail.trade_date <= get_trade_day(current_date, 0)
 #               and trade_date = date'2024-10-30'
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
-where (count_sum > 40)
+where count_sum > 40
   and tmp2.zr_zd < 9
-  and tmp2.jr_zd > 9
+#   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
 ;
 
@@ -44,10 +44,9 @@ select detail.trade_date,
        detail.trade_direction,
        detail.trade_money,
        detail.trade_price
-#        concat(if(detail.trade_direction = 1, '买', '卖'), detail.trade_money, '亿元') as aa
 from stock_trade_detail detail
-where detail.stock_name = '永辉超市'
-  and detail.trade_date = date'2024-10-30'
+where detail.stock_name = '上海贝岭'
+  and detail.trade_date = date'2024-11-01'
   and detail.trade_direction in (1, 2)
 order by detail.trade_time
 ;
@@ -63,3 +62,12 @@ order by trade_date desc;
 select *
 from stock_trade_detail
 where trade_date = date'2024-10-18'
+;
+
+select id,
+       stock_code,
+       stock_name,
+       market,
+       industry_name
+from stock_base_info
+where market != 'BJ'
