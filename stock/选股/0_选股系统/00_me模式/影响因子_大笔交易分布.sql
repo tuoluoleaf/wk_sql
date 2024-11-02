@@ -26,6 +26,7 @@ from (select tmp.trade_date,
               and (stock.stock_code not like '30%' and stock.stock_code not like '688%')
               and stock.stock_code = detail.stock_code
               and stock.lt_market_value <= 700
+              and detail.trade_money >= 800
               and detail.trade_date >= get_trade_day(current_date, -10)
               and detail.trade_date <= get_trade_day(current_date, 0)
 #               and trade_date = date'2024-10-30'
@@ -45,9 +46,10 @@ select detail.trade_date,
        detail.trade_money,
        detail.trade_price
 from stock_trade_detail detail
-where detail.stock_name = '上海贝岭'
-  and detail.trade_date = date'2024-11-01'
+where detail.stock_name = '盛和资源'
+  and detail.trade_date = date'2024-10-31'
   and detail.trade_direction in (1, 2)
+  and detail.trade_money >= 800
 order by detail.trade_time
 ;
 
