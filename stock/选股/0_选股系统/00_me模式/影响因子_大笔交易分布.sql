@@ -32,7 +32,7 @@ from (select tmp.trade_date,
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
 where count_sum > 40
-  and tmp2.zr_zd < 9
+#   and tmp2.zr_zd < 9
 #   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
 ;
