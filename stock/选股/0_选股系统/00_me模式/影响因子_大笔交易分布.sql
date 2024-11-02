@@ -25,14 +25,14 @@ from (select tmp.trade_date,
             where 1 = 1
               and (stock.stock_code not like '30%' and stock.stock_code not like '688%')
               and stock.stock_code = detail.stock_code
-              and stock.lt_market_value <= 800
+              and stock.lt_market_value <= 700
               and detail.trade_date >= get_trade_day(current_date, -10)
               and detail.trade_date <= get_trade_day(current_date, 0)
 #               and trade_date = date'2024-10-30'
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
 where count_sum > 40
-#   and tmp2.zr_zd < 9
+  and tmp2.zr_zd < 9
 #   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
 ;

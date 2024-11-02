@@ -15,7 +15,7 @@ from (select trade.trade_date,
 
         -- 10亿量
         and trade.trade_money >= 10 * 100000000
-        -- 市值[50亿, 1000亿)
+        -- 市值[50亿, 700亿)
         and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
         and (trade.trade_money / trade.hs * 100) < 100000000 * 700) tmp
 where tmp.rn <= 20
