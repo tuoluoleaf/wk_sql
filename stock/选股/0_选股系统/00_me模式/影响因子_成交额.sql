@@ -9,15 +9,15 @@ from (select trade.trade_date,
       from stock_trade_dn trade
       where 1 = 1
         and (trade.stock_code not like '30%' and trade.stock_code not like '688%')
-#   and trade.trade_date = date'2024-08-06'
-        and trade.trade_date >= date'2023-01-01'
-        and trade.trade_date < date'2024-01-01'
+        and trade.trade_date = date'2024-10-24'
+#         and trade.trade_date >= date'2023-01-01'
+#         and trade.trade_date < date'2024-01-01'
 
         -- 10亿量
         and trade.trade_money >= 10 * 100000000
-        -- 市值[50亿, 700亿)
+        -- 市值[0亿, 1000亿)
         and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
-        and (trade.trade_money / trade.hs * 100) < 100000000 * 700) tmp
+        and (trade.trade_money / trade.hs * 100) < 100000000 * 1000) tmp
 where tmp.rn <= 20
 order by trade_date desc, trade_money desc
 ;

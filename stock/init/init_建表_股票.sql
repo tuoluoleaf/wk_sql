@@ -39,6 +39,7 @@ create table stock_trade_dn
 ) comment '股票交易_日线未复权';
 create unique index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date);
 create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
+create index idx_stock_trade_stock_name on stock_trade_dn (stock_name);
 
 
 -- 股票MACD_DN
@@ -90,6 +91,7 @@ create table stock_ma_dn
 ) comment '股票MA_DN';
 create unique index idx_stock_ma_dn on stock_ma_dn (stock_code, trade_date);
 create index idx_stock_ma_dn_date on stock_ma_dn (trade_date);
+create index idx_stock_ma_stock_name on stock_ma_dn (stock_name);
 
 
 
