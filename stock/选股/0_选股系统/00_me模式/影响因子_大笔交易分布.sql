@@ -1,30 +1,37 @@
 select trade_date,
        stock_code,
        stock_name,
+       jr_zd,
+       mr_zd,
+       price,
+       lt_market_value,
        industry_name,
        count_sum,
        count_buy,
        count_sell,
        count_buy / count_sum  as buy_rate,
        count_sell / count_sum as sell_rate,
-       jr_zd,
-       zr_zd,
-       mr_zd
+       zr_zd
 from (select tmp.trade_date,
              tmp.stock_code,
              tmp.stock_name,
              tmp.industry_name,
              tmp.count_sum,
-             (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 1) as count_buy,
-             (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 2) as count_sell,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, -1))            as zr_zd,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = tmp.trade_date)                               as jr_zd,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, 1))             as mr_zd
+             (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 1 and t.trade_money >= 800) as count_buy,
+             (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 2 and t.trade_money >= 800) as count_sell,
+             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, -1))                                     as zr_zd,
+             zd                                                                                                                                                                   as jr_zd,
+             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, 1))                                      as mr_zd,
+             price,
+             lt_market_value
       from (select detail.stock_code,
                    detail.stock_name,
                    stock.industry_name,
-                   count(0) as count_sum,
-                   detail.trade_date
+                   count(0)          as count_sum,
+                   detail.trade_date,
+                   trade.zd,
+                   trade.close_price as price,
+                   stock.lt_market_value
             from stock_base_info stock,
                  stock_trade_detail detail,
                  stock_ma_dn ma,
@@ -40,10 +47,11 @@ from (select tmp.trade_date,
               -- 5日线上趋势
               and trade.close_price >= ma.ma5
               and trade.close_price >= ma.ma10
-              and trade.open_price <= ma.ma5 * 1.02
+              -- 不跳空
+#               and trade.open_price <= ma.ma5 * 1.01
 
-              -- 流通盘[100,5000]亿
-              and stock.lt_market_value > 100
+              -- 流通盘[50,5000]亿
+              and stock.lt_market_value > 50
               and stock.lt_market_value < 5000
               -- 大单买入800亿
               and detail.trade_money >= 800
@@ -54,8 +62,8 @@ from (select tmp.trade_date,
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
 where count_sum > 40
-  and tmp2.zr_zd < 9
-  and tmp2.jr_zd > 9
+#   and tmp2.zr_zd < 9
+#   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
 ;
 
@@ -68,11 +76,11 @@ select detail.trade_date,
        detail.trade_price
 from stock_trade_detail detail
 where 1 = 1
-  and detail.stock_code = '002510'
-#   and detail.stock_name = '天气漠'
-  and detail.trade_date = date'2024-11-06'
+#   and detail.stock_code = '002510'
+  and detail.stock_name = '中国卫通'
+  and detail.trade_date = date'2024-11-08'
   and detail.trade_direction in (1, 2)
-#   and detail.trade_money >= 800
+  and detail.trade_money >= 800
 order by detail.trade_time
 ;
 
