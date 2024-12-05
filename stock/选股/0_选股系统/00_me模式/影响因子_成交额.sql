@@ -10,14 +10,14 @@ from (select trade.trade_date,
       where 1 = 1
         and (trade.stock_code not like '30%' and trade.stock_code not like '688%')
 #         and trade.trade_date = date'2024-10-24'
-        and trade.trade_date >= date'2023-01-01'
-        and trade.trade_date < date'2024-01-01'
+        and trade.trade_date >= date'2024-11-01'
+        and trade.trade_date < date'2024-12-01'
 
         -- 10亿量
         and trade.trade_money >= 10 * 100000000
         -- 市值[0亿, 1000亿)
         and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
-        and (trade.trade_money / trade.hs * 100) < 100000000 * 1000) tmp
+        and (trade.trade_money / trade.hs * 100) < 100000000 * 5000) tmp
 where tmp.rn <= 20
 order by trade_date desc, trade_money desc
 ;
@@ -52,8 +52,8 @@ from (select trade.trade_date,
         and ma.stock_code = trade.stock_code
         and ma.trade_date = trade.trade_date
 #         and trade.trade_date = date'2024-10-24'
-        and trade.trade_date >= date '2021-01-01'
-        and trade.trade_date < date '2022-01-01'
+        and trade.trade_date >= date '2024-11-01'
+        and trade.trade_date < date '2024-12-01'
 
         -- 5日线上趋势
         and trade.close_price >= ma.ma5
@@ -61,9 +61,9 @@ from (select trade.trade_date,
         and trade.open_price <= ma.ma5 * 1.01
 
         -- 10亿量
-        and trade.trade_money >= 15 * 100000000
+        and trade.trade_money >= 20 * 100000000
         -- 市值[50亿, 1000亿)
-        and (trade.trade_money / trade.hs * 100) >= 100000000 * 100
+        and (trade.trade_money / trade.hs * 100) >= 100000000 * 50
         and (trade.trade_money / trade.hs * 100) < 100000000 * 5000) tmp
 where tmp.zr_zd < 9
   and tmp.jr_zd > 9

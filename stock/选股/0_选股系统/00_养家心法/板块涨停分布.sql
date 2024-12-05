@@ -15,7 +15,7 @@ where 1 = 1
   and trade.zd > 9.7
 
   -- 板块
-#   and stock.notion_name like '%华为概念%'
+  and stock.notion_name like '%低空%'
 #   and stock.industry_name like '%电力%'
 
   -- 个股

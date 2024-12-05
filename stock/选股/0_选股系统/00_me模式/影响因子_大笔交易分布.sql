@@ -48,7 +48,7 @@ from (select tmp.trade_date,
               and trade.close_price >= ma.ma5
               and trade.close_price >= ma.ma10
               -- 不跳空
-#               and trade.open_price <= ma.ma5 * 1.01
+              and trade.open_price <= ma.ma5 * 1.01
 
               -- 流通盘[50,5000]亿
               and stock.lt_market_value > 50
@@ -62,8 +62,8 @@ from (select tmp.trade_date,
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
 where count_sum > 40
-#   and tmp2.zr_zd < 9
-#   and tmp2.jr_zd > 9
+  and tmp2.zr_zd < 9
+  and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
 ;
 
@@ -97,3 +97,7 @@ from stock_trade_detail
 where trade_date = date'2024-10-18'
 ;
 
+
+
+select t.zd, t.* from stock_trade_dn t where stock_name = '中信证券' and (zd < -4 or zd > 4)  order by trade_date desc;
+select t.zd, t.* from stock_trade_dn t where stock_name = '中信证券' and zd > 4 order by trade_date desc;
