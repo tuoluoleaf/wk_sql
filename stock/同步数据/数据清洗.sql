@@ -27,4 +27,40 @@ set base.lt_market_value =
             (select round(trade.trade_money / trade.hs * 100 / 100000000, 2) from stock_trade_dn trade where trade.stock_code = base.stock_code and trade.trade_date = get_trade_day(current_date, 0))
 ;
 
--- 今日max_zd
+-- 更新涨跌标识-涨停
+update stock_trade_dn trade
+set trade.zd_remark = '涨停'
+where trade.stock_code not like '30%'
+  and trade.stock_code not like '688%'
+  and trade.zd > 9.7
+;
+
+-- 更新涨跌标识-跌停
+update stock_trade_dn trade
+set trade.zd_remark = '跌停'
+where trade.stock_code not like '30%'
+  and trade.stock_code not like '688%'
+  and trade.zd < -9.7
+;
+
+-- 更新涨跌标识-炸板
+update stock_trade_dn trade
+set trade.zd_remark = '炸板'
+where trade.stock_code not like '30%'
+  and trade.stock_code not like '688%'
+  and trade.zd < 9.7
+  and trade.zd > -9.7
+  and trade.highest_price != trade.close_price
+  and (1 + trade.zd / 100) != 0
+  and (trade.close_price / (1 + trade.zd / 100)) != 0
+  and (trade.highest_price - (trade.close_price / (1 + trade.zd / 100))) / (trade.close_price / (1 + trade.zd / 100)) > 0.097
+;
+
+
+select (trade.close_price / (1 + trade.zd / 100))                                                                      as a,
+       (trade.highest_price - (trade.close_price / (1 + trade.zd / 100))) / (trade.close_price / (1 + trade.zd / 100)) as b
+from stock_trade_dn trade
+where stock_code = '000681'
+  and trade_date = date'2024-12-05'
+;
+
