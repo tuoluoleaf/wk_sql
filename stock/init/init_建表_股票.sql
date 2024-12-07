@@ -44,6 +44,9 @@ create index idx_stock_trade_stock_name on stock_trade_dn (stock_name);
 alter table stock_trade_dn
     add zd_remark varchar(50) null comment '涨跌标识';
 
+alter table stock_trade_dn
+    add level_num int null comment '涨跌级别';
+
 
 -- 股票MACD_DN
 create table stock_macd_dn

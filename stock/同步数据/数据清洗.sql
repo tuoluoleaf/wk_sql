@@ -56,11 +56,17 @@ where trade.stock_code not like '30%'
   and (trade.highest_price - (trade.close_price / (1 + trade.zd / 100))) / (trade.close_price / (1 + trade.zd / 100)) > 0.097
 ;
 
+-- 涨跌级别：首板、首炸板
+with aa as (select trade.id
+            from stock_trade_dn trade,
+                 stock_trade_dn tradeB1
+            where tradeB1.stock_code = trade.stock_code
+              and tradeB1.trade_date = get_trade_day(trade.trade_date, -1)
+              and trade.zd_remark = '涨停'
+              and tradeB1.zd_remark != '涨停')
 
-select (trade.close_price / (1 + trade.zd / 100))                                                                      as a,
-       (trade.highest_price - (trade.close_price / (1 + trade.zd / 100))) / (trade.close_price / (1 + trade.zd / 100)) as b
-from stock_trade_dn trade
-where stock_code = '000681'
-  and trade_date = date'2024-12-05'
+update stock_trade_dn
+set level_num = 1
+where id in (select id from aa)
 ;
 

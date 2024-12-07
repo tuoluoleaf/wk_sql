@@ -43,25 +43,26 @@ from (select tmp.trade_date,
               and ma.trade_date = detail.trade_date
               and trade.stock_code = detail.stock_code
               and trade.trade_date = detail.trade_date
+              -- 交易日期
+#               and detail.trade_date >= get_trade_day(current_date, -10)
+#               and detail.trade_date <= get_trade_day(current_date, 0)
+              and detail.trade_date = date'2024-12-05'
 
               -- 5日线上趋势
               and trade.close_price >= ma.ma5
               and trade.close_price >= ma.ma10
               -- 不跳空
-              and trade.open_price <= ma.ma5 * 1.01
+#               and trade.open_price <= ma.ma5 * 1.01
 
-              -- 流通盘[50,5000]亿
-              and stock.lt_market_value > 50
+              -- 流通盘[25,5000]亿
+              and stock.lt_market_value > 25
               and stock.lt_market_value < 5000
-              -- 大单买入800亿
-              and detail.trade_money >= 800
-              -- 交易日期
-              and detail.trade_date >= get_trade_day(current_date, -10)
-              and detail.trade_date <= get_trade_day(current_date, 0)
-#               and detail.trade_date = date'2024-10-24'
+              -- 万手成交 or 500亿
+              and (detail.trade_num >= 9900 * 10000 or detail.trade_money >= 500)
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
-where count_sum > 40
+where 1 = 1
+#   and count_sum > 40
   and tmp2.zr_zd < 9
   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
@@ -77,10 +78,10 @@ select detail.trade_date,
 from stock_trade_detail detail
 where 1 = 1
 #   and detail.stock_code = '002510'
-  and detail.stock_name = '中国卫通'
-  and detail.trade_date = date'2024-11-08'
+  and detail.stock_name = '供销大集'
+  and detail.trade_date = date'2024-12-05'
   and detail.trade_direction in (1, 2)
-  and detail.trade_money >= 800
+  and (detail.trade_num >= 9900 * 10000 or detail.trade_money >= 800)
 order by detail.trade_time
 ;
 
@@ -99,5 +100,13 @@ where trade_date = date'2024-10-18'
 
 
 
-select t.zd, t.* from stock_trade_dn t where stock_name = '中信证券' and (zd < -4 or zd > 4)  order by trade_date desc;
-select t.zd, t.* from stock_trade_dn t where stock_name = '中信证券' and zd > 4 order by trade_date desc;
+select t.zd, t.*
+from stock_trade_dn t
+where stock_name = '中信证券'
+  and (zd < -4 or zd > 4)
+order by trade_date desc;
+select t.zd, t.*
+from stock_trade_dn t
+where stock_name = '中信证券'
+  and zd > 4
+order by trade_date desc;
