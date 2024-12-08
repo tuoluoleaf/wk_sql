@@ -63,7 +63,20 @@ with aa as (select trade.id
             where tradeB1.stock_code = trade.stock_code
               and tradeB1.trade_date = get_trade_day(trade.trade_date, -1)
               and trade.zd_remark = '涨停'
-              and tradeB1.zd_remark != '涨停')
+              and (tradeB1.zd_remark != '涨停' or tradeB1.zd_remark is null))
+
+update stock_trade_dn
+set level_num = 1
+where id in (select id from aa)
+;
+
+with aa as (select trade.id
+            from stock_trade_dn trade,
+                 stock_trade_dn tradeB1
+            where tradeB1.stock_code = trade.stock_code
+              and tradeB1.trade_date = get_trade_day(trade.trade_date, -1)
+              and trade.zd_remark = '炸板'
+              and (tradeB1.zd_remark != '涨停' or tradeB1.zd_remark is null))
 
 update stock_trade_dn
 set level_num = 1

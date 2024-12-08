@@ -35,11 +35,15 @@ create table stock_trade_dn
     create_time   datetime    default current_timestamp                             null comment '创建时间',
     update_by     varchar(64) default 'sys'                                         null comment '更新者',
     update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间',
-    remark        varchar(500)                                                      null comment '备注'
+    remark        varchar(500)                                                      null comment '备注',
+    zd_remark     varchar(50)                                                       null comment '涨跌标识',
+    level_num     int                                                               null comment '涨跌级别'
 ) comment '股票交易_日线未复权';
 create unique index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date);
 create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
 create index idx_stock_trade_stock_name on stock_trade_dn (stock_name);
+create index idx_stock_trade_dn_1 on stock_trade_dn (stock_code, zd_remark, level_num);
+
 
 alter table stock_trade_dn
     add zd_remark varchar(50) null comment '涨跌标识';
