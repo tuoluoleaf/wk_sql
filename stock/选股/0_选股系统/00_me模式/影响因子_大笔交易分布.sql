@@ -44,9 +44,9 @@ from (select tmp.trade_date,
               and trade.stock_code = detail.stock_code
               and trade.trade_date = detail.trade_date
               -- 交易日期
-#               and detail.trade_date >= get_trade_day(current_date, -10)
-#               and detail.trade_date <= get_trade_day(current_date, 0)
-              and detail.trade_date = date'2024-12-05'
+              and detail.trade_date >= get_trade_day(current_date, -10)
+              and detail.trade_date <= get_trade_day(current_date, 0)
+#               and detail.trade_date = date'2024-12-05'
 
               -- 5日线上趋势
               and trade.close_price >= ma.ma5
@@ -62,7 +62,7 @@ from (select tmp.trade_date,
 
             group by detail.stock_code, detail.stock_name, detail.trade_date) tmp) tmp2
 where 1 = 1
-#   and count_sum > 40
+  and count_sum > 40
   and tmp2.zr_zd < 9
   and tmp2.jr_zd > 9
 order by trade_date desc, count_sum desc
@@ -78,10 +78,10 @@ select detail.trade_date,
 from stock_trade_detail detail
 where 1 = 1
 #   and detail.stock_code = '002510'
-  and detail.stock_name = '供销大集'
-  and detail.trade_date = date'2024-12-05'
+  and detail.stock_name = '长城科技'
+  and detail.trade_date = date'2024-12-06'
   and detail.trade_direction in (1, 2)
-  and (detail.trade_num >= 9900 * 10000 or detail.trade_money >= 800)
+  and (detail.trade_num >= 9900 * 10000 or detail.trade_money >= 500)
 order by detail.trade_time
 ;
 
