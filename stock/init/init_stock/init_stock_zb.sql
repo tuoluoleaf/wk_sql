@@ -1,0 +1,26 @@
+-- 炸板股票
+create table stock_zb
+(
+    id                 bigint primary key auto_increment comment '主键id',
+    stock_code         varchar(10) comment '股票代码',
+    stock_name         varchar(20) comment '股票名称',
+    trade_date         date comment '交易日期',
+    price              decimal(16, 2) comment '价[元]',
+    zt_price           decimal(16, 2) comment '涨停价[元]',
+    zd                 decimal(16, 2) comment '涨跌幅[%]',
+    trade_money        decimal(16, 2) comment '成交额[元]',
+    lt_market_value    decimal(16, 2) comment '流通市值 (亿元)',
+    total_market_value decimal(16, 2) comment '总市值 (亿元)',
+    hs                 decimal(16, 2) comment '换手率[%]',
+    x_day_y            varchar(20) comment '涨停统计（x天/y板）',
+
+    first_zt_time      varchar(10) comment '首次封板时间（HH:mm:ss）',
+    zb_count           int                                                               null comment '炸板次数',
+
+    create_by          varchar(64) default 'sys'                                         null comment '创建者',
+    create_time        datetime    default current_timestamp                             null comment '创建时间',
+    update_by          varchar(64) default 'sys'                                         null comment '更新者',
+    update_time        datetime    default current_timestamp on update current_timestamp null comment '更新时间'
+) comment '炸板股票';
+create unique index idx_stock_zb on stock_zb (stock_code, trade_date);
+

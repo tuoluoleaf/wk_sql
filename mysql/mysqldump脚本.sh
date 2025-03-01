@@ -23,7 +23,7 @@ fi
 #执行备份
 for database_name in ${db_name_array[*]}
 do
-  #简单写法  mysqldump -u root -p123456 users > /root/mysqlbackup/aa.sql
+  #简单写法  mysqldump -u root -p123456 users > /root/mysqlbackup/init_stock_zt.sql
   mysqldump -u $username -p$password $database_name > $backup_dir/$database_name-$dd.sql
 
   #写创建备份日志
