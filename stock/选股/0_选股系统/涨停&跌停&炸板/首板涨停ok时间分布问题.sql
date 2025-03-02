@@ -163,3 +163,25 @@ where zt.stock_code not like '30%'
   and zt.zt_time_level in (2)
 order by zt.trade_date desc, zt.last_zt_time
 ;
+
+
+-- 快速2板的1板是什么时间段涨停的
+select zt_b1.zt_time_level,
+       count(0)
+from stock_zt zt,
+     stock_zt zt_b1
+where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
+  and zt.zd < 10.2
+  -- 2板
+  and zt.zt_continue_num = 2
+  and zt.zt_time_level in (1, 2)
+
+
+  -- 1板
+  and zt_b1.stock_code = zt.stock_code
+  and zt_b1.trade_date = get_trade_day(zt.trade_date, -1)
+  and zt_b1.zt_continue_num = 1
+
+group by zt_b1.zt_time_level
+order by zt_b1.zt_time_level
+;
