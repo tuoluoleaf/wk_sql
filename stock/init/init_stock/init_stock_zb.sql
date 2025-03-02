@@ -16,6 +16,8 @@ create table stock_zb
 
     first_zt_time      varchar(10) comment '首次封板时间（HH:mm:ss）',
     zb_count           int                                                               null comment '炸板次数',
+    zb_for_zt_point    int                                                               null comment '炸板对应涨停位置',
+    zb_time_level      int                                                               null comment '炸板时间分类',
 
     create_by          varchar(64) default 'sys'                                         null comment '创建者',
     create_time        datetime    default current_timestamp                             null comment '创建时间',
