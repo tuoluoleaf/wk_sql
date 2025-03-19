@@ -59,10 +59,11 @@ order by zt.trade_date desc, zt.last_zt_time;
 
 -- 首板，隔日溢价
 select t.zt_time_level,
-       avg(t.next_open_zd),
-       avg(t.next_closse_zd),
-       avg(t.next_highest_zd),
-       avg(t.next_lowest_price)
+       count(0)                           as count_sum,
+       round(avg(t.next_open_zd), 2)      as next_open_zd,
+       round(avg(t.next_closse_zd), 2)    as next_closse_zd,
+       round(avg(t.next_highest_zd), 2)   as next_highest_zd,
+       round(avg(t.next_lowest_price), 2) as next_lowest_price
 from (select zt.zt_time_level,
              round((trade_next.open_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)    as next_open_zd,
              trade_next.zd                                                                                                                                            as next_closse_zd,
@@ -73,6 +74,7 @@ from (select zt.zt_time_level,
       where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
         and zt.zd < 10.2
         and zt.zt_continue_num = 1
+#         and zt.trade_date = date'2025-03-04'
 
         -- 隔日
         and trade_next.stock_code = zt.stock_code

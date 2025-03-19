@@ -15,7 +15,7 @@ order by zb.zb_time_level
 ;
 
 
--- 首板，隔日溢价
+-- 炸板，隔日溢价
 select t.zb_time_level,
        avg(t.current_zd),
        avg(t.next_zd),
