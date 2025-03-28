@@ -16,9 +16,9 @@ select zt.trade_date,
        zt.stock_name,
        if(zt.zd > 11, '一板', '2板') as continue_num
 from stock_zt zt
-where zt.trade_date >= date'2025-03-21'
+where zt.trade_date >= date'2025-03-26'
   and ((zt.zd < 11 and zt_continue_num = 2) or (zt.zd > 11 and zt_continue_num = 1))
-order by zt.trade_date, zt.last_zt_time
+order by zt.trade_date, continue_num, zt.last_zt_time
 ;
 
 
