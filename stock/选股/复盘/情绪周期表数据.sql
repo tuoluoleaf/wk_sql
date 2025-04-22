@@ -25,6 +25,6 @@ select tdate.trade_day,
        (select count(0) from stock_zt zt where zt.trade_date = tdate.trade_day and zt.zt_continue_num >= 4)                                                                                                as 4b_sum,
        (select GROUP_CONCAT(concat(zt.stock_name, zt.zt_continue_num) order by zt.zt_continue_num desc SEPARATOR ', ') from stock_zt zt where zt.trade_date = tdate.trade_day and zt.zt_continue_num >= 4) as 4b_sum_stocks
 from stock_trade_day tdate
-where tdate.trade_day >= date'2025-03-31'
-  and tdate.trade_day < date'2026-04-01'
+where tdate.trade_day = date'2025-04-21'
+#   and tdate.trade_day < date'2026-05-01'
 order by tdate.trade_day
