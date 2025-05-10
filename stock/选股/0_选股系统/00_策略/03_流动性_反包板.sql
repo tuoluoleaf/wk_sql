@@ -22,7 +22,7 @@ where 1 = 1
   and zt.zt_continue_num = 1
   and (x_day_y like '%/4' or x_day_y like '%/5' or x_day_y like '%/6' or x_day_y like '%/7' or x_day_y like '%/8' or x_day_y like '%/9' or x_day_y like '%/10' or x_day_y like '%/11')
 
-  and zt.trade_date >= date'2025-01-01'
-  and zt.trade_date < date'2026-01-01'
+  and zt.trade_date >= date'2024-01-01'
+  and zt.trade_date < date'2025-01-01'
 order by zt.trade_date desc, zt.trade_money desc
 ;
