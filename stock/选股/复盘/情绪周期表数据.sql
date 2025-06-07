@@ -27,6 +27,6 @@ select tdate.trade_day,
 from stock_trade_day tdate
 where 1 = 1
 #   and tdate.trade_day = date'2025-05-19'
-  and tdate.trade_day >= date'2025-05-19'
-  and tdate.trade_day < date'2025-06-01'
+  and tdate.trade_day >= date'2025-05-26'
+  and tdate.trade_day < date'2025-07-01'
 order by tdate.trade_day
