@@ -24,7 +24,8 @@ set lt_market_value = round(lt_market_value / 100000000, 2);
 -- 更新最新流动市值
 update stock_base_info base
 set base.lt_market_value =
-            (select round(trade.trade_money / trade.hs * 100 / 100000000, 2) from stock_trade_dn trade where trade.stock_code = base.stock_code and trade.trade_date = get_trade_day(current_date, 0))
+            (select round(trade.trade_money / trade.hs * 100 / 100000000, 2) from stock_trade_dn trade where trade.stock_code = base.stock_code and trade.trade_date = get_trade_day(date'2025-05-30', 0))
+where base.lt_market_value is null
 ;
 
 -- 更新涨跌标识-涨停
