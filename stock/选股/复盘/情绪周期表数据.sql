@@ -1,6 +1,6 @@
 select tdate.trade_day,
-       (select count(0) from stock_trade_dn trade where trade.trade_date = tdate.trade_day and trade.zd >= 0)                                                                                              as red_sum,
-       (select count(0) from stock_trade_dn trade where trade.trade_date = tdate.trade_day and trade.zd < 0)                                                                                               as green_sum,
+       (select count(0) from stock_trade trade where trade.trade_date = tdate.trade_day and trade.zd >= 0)                                                                                              as red_sum,
+       (select count(0) from stock_trade trade where trade.trade_date = tdate.trade_day and trade.zd < 0)                                                                                               as green_sum,
        (select count(0) from stock_zt zt where zt.trade_date = tdate.trade_day)                                                                                                                            as zt_sum,
        (select count(0) from stock_dt dt where dt.trade_date = tdate.trade_day)                                                                                                                            as dt_sum,
        (select count(0) from stock_zb zb where zb.trade_date = tdate.trade_day)                                                                                                                            as zb_sum,

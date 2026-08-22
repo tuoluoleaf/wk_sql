@@ -24,7 +24,7 @@ select t1.stock_code,
              t1.industry_name,
              t1.zd,
              t1.zd_next1,
-             (select round((a.highest_price-t1.close_price)/t1.close_price*100, 2) from stock_trade_dn a where a.stock_code = t1.stock_code and a.trade_date = get_trade_day(t1.trade_date, 1)) as next_h
+             (select round((a.highest_price-t1.close_price)/t1.close_price*100, 2) from stock_trade a where a.stock_code = t1.stock_code and a.trade_date = get_trade_day(t1.trade_date, 1)) as next_h
       from stock_result_20 t1
       where t1.zd < 9
         and t1.zd_next1 is not null

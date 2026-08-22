@@ -10,18 +10,18 @@ insert into stock_result_20 (stock_code, stock_name, industry_name, trade_date, 
             trade.close_price,
             trade.zd,
             (select sum(t1.zd)
-             from stock_trade_dn t1
+             from stock_trade t1
              where t1.stock_code = trade.stock_code
                and t1.trade_date >= get_trade_day(ma.trade_date, 1)
                and t1.trade_date <= get_trade_day(ma.trade_date, 5)) as zd_next1,
             ma.ma5
      from stock_ma_dn ma,
-          stock_trade_dn trade,
+          stock_trade trade,
           stock_ma_dn maB1,
           stock_ma_dn maB2,
-          stock_trade_dn tradeB1,
-          stock_trade_dn tradeB2,
-          stock_trade_dn tradeB3,
+          stock_trade tradeB1,
+          stock_trade tradeB2,
+          stock_trade tradeB3,
           stock_base_info sbi
      where 1 = 1
        -- 排除：创业板、科创板
@@ -68,4 +68,4 @@ insert into stock_result_20 (stock_code, stock_name, industry_name, trade_date, 
 
 
 
-select * from stock_trade_dn where trade_date = date'2024-08-27'
+select * from stock_trade where trade_date = date'2024-08-27'

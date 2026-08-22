@@ -8,7 +8,7 @@ select smaCurrent.stock_code,
        smaCurrent.ma5,
        smaCurrent.ma200
 from stock_ma_dn smaCurrent,
-     stock_trade_dn tradeCurrent,
+     stock_trade tradeCurrent,
      stock_base_info sbi
 where 1 = 1
   and sbi.stock_code = tradeCurrent.stock_code

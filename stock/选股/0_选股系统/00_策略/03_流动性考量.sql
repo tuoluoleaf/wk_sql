@@ -6,7 +6,7 @@ select zt.trade_date,
        zt.lt_market_value,
        zt.zt_continue_num,
        (select round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)
-        from stock_trade_dn trade_next
+        from stock_trade trade_next
         where trade_next.stock_code = zt.stock_code
           and trade_next.trade_date = get_trade_day(zt.trade_date, 1)) as next_highest_price,
        zt.x_day_y,
@@ -35,7 +35,7 @@ select zb.trade_date,
        zb.lt_market_value,
        zb.zb_for_zt_point,
        (select round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)
-        from stock_trade_dn trade_next
+        from stock_trade trade_next
         where trade_next.stock_code = zb.stock_code
           and trade_next.trade_date = get_trade_day(zb.trade_date, 1)) as next_highest_price,
        zb.x_day_y,

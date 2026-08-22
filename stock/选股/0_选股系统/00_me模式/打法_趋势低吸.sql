@@ -1,5 +1,5 @@
 select *
-from stock_trade_dn
+from stock_trade
 where stock_code = '002456'
 order by trade_date desc;
 
@@ -18,11 +18,11 @@ select trade.trade_date,
        round((trade.close_price - trade.open_price) / trade.open_price * 100, 2)           as zd_me1,
        round((ifnull(tradeA1.open_price, 0) - trade.open_price) / trade.open_price * 100, 2)  as zd_me2,
        round((ifnull(tradeA1.close_price, 0) - trade.open_price) / trade.open_price * 100, 2) as zd_me3
-from stock_trade_dn trade,
-     stock_trade_dn tradeB1,
+from stock_trade trade,
+     stock_trade tradeB1,
      stock_ma_dn ma,
      stock_ma_dn maB1
-         left join stock_trade_dn tradeA1 on tradeA1.stock_code = maB1.stock_code and tradeA1.trade_date = get_trade_day(maB1.trade_date, 2)
+         left join stock_trade tradeA1 on tradeA1.stock_code = maB1.stock_code and tradeA1.trade_date = get_trade_day(maB1.trade_date, 2)
 where (trade.stock_code not like '30%' and trade.stock_code not like '688%')
   and ma.stock_code = trade.stock_code
   and ma.trade_date = trade.trade_date

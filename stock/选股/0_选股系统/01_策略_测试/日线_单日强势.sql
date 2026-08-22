@@ -8,7 +8,7 @@ select smaCurrent.stock_code,
        tradeCurrent.close_price,
        tradeCurrent.zd
 from stock_ma_dn smaCurrent,
-     stock_trade_dn tradeCurrent
+     stock_trade tradeCurrent
          left join stock_base_info sbi on sbi.stock_code = tradeCurrent.stock_code
 where 1 = 1
   -- 排除：创业板、科创板

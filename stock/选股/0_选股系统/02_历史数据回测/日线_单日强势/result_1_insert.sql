@@ -11,7 +11,7 @@ insert into stock_result_1 (stock_code, stock_name, trade_date, industry_name, c
             tradeCurrent.zd,
             smaCurrent.ma5
      from stock_ma_dn smaCurrent,
-          stock_trade_dn tradeCurrent,
+          stock_trade tradeCurrent,
           stock_base_info sbi
      where 1 = 1
        and sbi.stock_code = tradeCurrent.stock_code

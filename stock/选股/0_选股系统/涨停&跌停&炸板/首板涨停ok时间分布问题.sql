@@ -19,7 +19,7 @@ order by zt.zt_time_level
 select zt.zt_time_level,
        count(0)
 from stock_zt zt,
-     stock_trade_dn trade_next
+     stock_trade trade_next
 where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
   and zt.zd < 10.2
   and zt.zt_continue_num = 1
@@ -44,7 +44,7 @@ select zt.stock_code,
        zt.zt_time_level,
        trade_next.zd as next_zd
 from stock_zt zt,
-     stock_trade_dn trade_next
+     stock_trade trade_next
 where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
   and zt.zd < 10.2
 #   and zt.zt_time_level in (2)
@@ -70,7 +70,7 @@ from (select zt.zt_time_level,
              round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2) as next_highest_zd,
              round((trade_next.lowest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)  as next_lowest_price
       from stock_zt zt,
-           stock_trade_dn trade_next
+           stock_trade trade_next
       where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
         and zt.zd < 10.2
         and zt.zt_continue_num = 1
@@ -98,7 +98,7 @@ select zt.stock_code,
        round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2) as next_highest_zd,
        round((trade_next.lowest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)  as next_lowest_price
 from stock_zt zt
-         left join stock_trade_dn trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
+         left join stock_trade trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
 where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
   and zt.zd < 10.2
   and zt.zt_time_level in (2)
@@ -130,7 +130,7 @@ select zt.stock_code,
        round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2) as next_highest_zd,
        round((trade_next.lowest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)  as next_lowest_price
 from stock_zt zt
-         left join stock_trade_dn trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
+         left join stock_trade trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
 where (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4%' and zt.stock_code not like '8%' and zt.stock_code not like '9%')
   and zt.zd < 10.2
   and zt.zt_continue_num = 1
@@ -155,7 +155,7 @@ select zt.stock_code,
        round((trade_next.highest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2) as next_highest_zd,
        round((trade_next.lowest_price - (trade_next.close_price / (1 + trade_next.zd / 100))) / (trade_next.close_price / (1 + trade_next.zd / 100)) * 100, 2)  as next_lowest_price
 from stock_zt zt
-         left join stock_trade_dn trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
+         left join stock_trade trade_next on trade_next.stock_code = zt.stock_code and trade_next.trade_date = get_trade_day(zt.trade_date, 1)
 where zt.stock_code not like '30%'
   and zt.stock_code not like '688%'
   and zt.zt_continue_num = 1

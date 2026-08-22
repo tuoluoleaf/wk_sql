@@ -5,7 +5,7 @@ select base.stock_code,
        trade.trade_date,
        trade.close_price,
        trade.zd
-from stock_trade_dn trade,
+from stock_trade trade,
      stock_base_info base
 where trade.trade_date >= date'2023-10-01'
 and trade.trade_date <= date'2023-12-01'

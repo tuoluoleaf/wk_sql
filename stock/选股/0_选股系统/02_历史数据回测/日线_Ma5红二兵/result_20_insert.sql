@@ -12,12 +12,12 @@ insert into stock_result_20 (stock_code, stock_name, industry_name, trade_date, 
             trade1.zd as zd_next1,
             ma.ma5
      from stock_ma_dn ma,
-          stock_trade_dn trade
-              left join stock_trade_dn trade1 on trade1.stock_code = trade.stock_code and trade1.trade_date = get_trade_day(trade.trade_date, 1),
+          stock_trade trade
+              left join stock_trade trade1 on trade1.stock_code = trade.stock_code and trade1.trade_date = get_trade_day(trade.trade_date, 1),
           stock_ma_dn maB1,
-          stock_trade_dn tradeB1,
+          stock_trade tradeB1,
           stock_ma_dn maB2,
-          stock_trade_dn tradeB2,
+          stock_trade tradeB2,
           stock_base_info sbi
      where 1 = 1
        -- 排除：创业板、科创板

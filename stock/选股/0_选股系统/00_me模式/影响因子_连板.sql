@@ -1,10 +1,10 @@
 select trade1.stock_code,
        trade1.stock_name,
        trade1.trade_date
-from stock_trade_dn trade1,
-     stock_trade_dn trade2,
-     stock_trade_dn trade3,
-     stock_trade_dn trade4
+from stock_trade trade1,
+     stock_trade trade2,
+     stock_trade trade3,
+     stock_trade trade4
 where 1 = 1
   and (trade1.stock_code not like '30%' and trade1.stock_code not like '688%')
   and trade2.stock_code = trade1.stock_code
@@ -24,8 +24,8 @@ where 1 = 1
 select trade1.stock_code,
        trade1.stock_name,
        trade1.trade_date
-from stock_trade_dn trade1,
-     stock_trade_dn trade2
+from stock_trade trade1,
+     stock_trade trade2
 where 1 = 1
   and trade1.stock_code like '30%'
   and trade2.stock_code = trade1.stock_code

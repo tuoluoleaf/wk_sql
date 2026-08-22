@@ -11,7 +11,7 @@ insert into stock_result_1 (stock_code, stock_name, trade_date, industry_name, c
             tradeCurrent.zd,
             smaCurrent.ma5
      from stock_ma_dn smaCurrent,
-          stock_trade_dn tradeCurrent
+          stock_trade tradeCurrent
               left join stock_base_info sbi on sbi.stock_code = tradeCurrent.stock_code
      where 1 = 1
        -- 排除：创业板、科创板

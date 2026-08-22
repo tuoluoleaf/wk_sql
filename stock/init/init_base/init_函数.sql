@@ -39,7 +39,7 @@ BEGIN
         select ifnull(b.zd, 0), ifnull(b.close_price, 0)
         into current_zd,current_close_price
         from stock_base_info a
-                 left join stock_trade_dn b on b.stock_code = stock_code_input and b.trade_date = query_date
+                 left join stock_trade b on b.stock_code = stock_code_input and b.trade_date = query_date
         where a.stock_code = stock_code_input;
 
         select ifnull(b.ma5, 0)

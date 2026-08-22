@@ -24,7 +24,7 @@ order by trade_date desc
 -- T字
 select *
 from stock_zt zt,
-     stock_trade_dn trade
+     stock_trade trade
 where 1 = 1
   and (zt.stock_code not like '30%' and zt.stock_code not like '688%')
   and zt.zt_continue_num in (1, 2, 3)
@@ -46,7 +46,7 @@ select zt.trade_date,
        zt.zt_continue_num,
        tradeA1.zd as next_zd
 from stock_zt zt,
-     stock_trade_dn tradeA1
+     stock_trade tradeA1
 where 1 = 1
   and (zt.stock_code not like '30%' and zt.stock_code not like '688%')
   and zt.zt_continue_num in (1, 2, 3)

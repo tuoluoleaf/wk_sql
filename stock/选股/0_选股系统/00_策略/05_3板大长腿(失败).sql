@@ -13,7 +13,7 @@ order by trade_date desc
 -- 3板、T字
 select *
 from stock_zt zt,
-     stock_trade_dn trade
+     stock_trade trade
 where 1 = 1
   and zt.zt_continue_num = 3
   and zt.first_zt_time <= '09:30:00'

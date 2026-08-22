@@ -8,7 +8,7 @@ select zb.trade_date,
        trade.zd as next_zd,
        (-10 + zb.zd + trade.zd) as total_zd
 from stock_zb zb
-         left join stock_trade_dn trade on trade.stock_code = zb.stock_code and trade.trade_date = get_trade_day(zb.trade_date, 1)
+         left join stock_trade trade on trade.stock_code = zb.stock_code and trade.trade_date = get_trade_day(zb.trade_date, 1)
 where 1 = 1
   and (zb.stock_code not like '30%' and zb.stock_code not like '688%')
   and zb.zb_for_zt_point = 4
@@ -28,7 +28,7 @@ select zt.trade_date,
        zt.zt_continue_num,
        trade.zd as next_zd
 from stock_zt zt
-         left join stock_trade_dn trade on trade.stock_code = zt.stock_code and trade.trade_date = get_trade_day(zt.trade_date, 1)
+         left join stock_trade trade on trade.stock_code = zt.stock_code and trade.trade_date = get_trade_day(zt.trade_date, 1)
 where 1 = 1
   and (zt.stock_code not like '30%' and zt.stock_code not like '688%')
   and zt.zt_continue_num = 4

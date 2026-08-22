@@ -10,7 +10,7 @@ select zt.trade_date,
        zt.zt_time_level,
        trade.zd as next_zd
 from stock_zt zt,
-     stock_trade_dn trade
+     stock_trade trade
 where 1 = 1
   and (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4' and zt.stock_code not like '8%')
   and zt.zt_continue_num = 1

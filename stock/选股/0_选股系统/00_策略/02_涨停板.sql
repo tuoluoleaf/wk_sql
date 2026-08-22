@@ -4,7 +4,7 @@ select trade.stock_code,
        trade.trade_date,
        trade.close_price,
        trade.zd
-from stock_trade_dn trade,
+from stock_trade trade,
      stock_base_info sbi
 where 1 = 1
   -- 排除：创业板、科创板

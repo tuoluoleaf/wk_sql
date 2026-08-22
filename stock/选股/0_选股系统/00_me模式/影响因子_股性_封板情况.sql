@@ -1,10 +1,10 @@
 -- 涨停数_QB、炸板数_QB、跌停数
 select stock.stock_code,
        stock.stock_name,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停')        as count_zt,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '跌停')        as count_dt,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '炸板')        as count_zb,
-       (select avg(open_price) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停') as count_zt_next_open_avg,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停')        as count_zt,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '跌停')        as count_dt,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '炸板')        as count_zb,
+       (select avg(open_price) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停') as count_zt_next_open_avg,
        stock.industry_name,
        stock.notion_name
 from stock_base_info stock
@@ -33,8 +33,8 @@ with table_tmp_trade as (select tmp.stock_code,
                                       round((tradeA1.open_price - trade.close_price) / trade.close_price * 100, 2)    as next_open_zd,
                                       round((tradeA1.highest_price - trade.close_price) / trade.close_price * 100, 2) as next_highest_zd
                                from stock_base_info stock,
-                                    stock_trade_dn trade,
-                                    stock_trade_dn tradeA1
+                                    stock_trade trade,
+                                    stock_trade tradeA1
                                where (stock.stock_code not like '30%' and stock.stock_code not like '688%')
                                  and trade.stock_code = stock.stock_code
                                  and tradeA1.stock_code = trade.stock_code
@@ -82,9 +82,9 @@ where (stock.stock_code not like '30%' and stock.stock_code not like '688%')
 -- 涨停数_1B、炸板数_1B、跌停数
 select stock.stock_code,
        stock.stock_name,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停' and trade.level_num = 1) as count_zt,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '跌停')                         as count_dt,
-       (select count(0) from stock_trade_dn trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '炸板' and trade.level_num = 1) as count_zb,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '涨停' and trade.level_num = 1) as count_zt,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '跌停')                         as count_dt,
+       (select count(0) from stock_trade trade where stock.stock_code = trade.stock_code and trade.trade_date < date'2025-01-01' and trade.trade_date >= date'2021-01-01' and trade.zd_remark = '炸板' and trade.level_num = 1) as count_zb,
        stock.industry_name,
        stock.notion_name
 from stock_base_info stock
@@ -115,8 +115,8 @@ with table_tmp_trade as (select tmp.stock_code,
                                       round((tradeA1.open_price - trade.close_price) / trade.close_price * 100, 2)    as next_open_zd,
                                       round((tradeA1.highest_price - trade.close_price) / trade.close_price * 100, 2) as next_highest_zd
                                from stock_base_info stock,
-                                    stock_trade_dn trade,
-                                    stock_trade_dn tradeA1
+                                    stock_trade trade,
+                                    stock_trade tradeA1
                                where (stock.stock_code not like '30%' and stock.stock_code not like '688%')
                                  and trade.stock_code = stock.stock_code
                                  and tradeA1.stock_code = trade.stock_code

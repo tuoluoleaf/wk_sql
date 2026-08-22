@@ -19,9 +19,9 @@ from (select tmp.trade_date,
              tmp.count_sum,
              (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 1 and t.trade_money >= 800) as count_buy,
              (select count(0) from stock_trade_detail t where t.stock_code = tmp.stock_code and t.trade_date = tmp.trade_date and t.trade_direction = 2 and t.trade_money >= 800) as count_sell,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, -1))                                     as zr_zd,
+             (select t1.zd from stock_trade t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, -1))                                     as zr_zd,
              zd                                                                                                                                                                   as jr_zd,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, 1))                                      as mr_zd,
+             (select t1.zd from stock_trade t1 where t1.stock_code = tmp.stock_code and t1.trade_date = get_trade_day(tmp.trade_date, 1))                                      as mr_zd,
              price,
              lt_market_value
       from (select detail.stock_code,
@@ -35,7 +35,7 @@ from (select tmp.trade_date,
             from stock_base_info stock,
                  stock_trade_detail detail,
                  stock_ma_dn ma,
-                 stock_trade_dn trade
+                 stock_trade trade
             where 1 = 1
               and (stock.stock_code not like '30%' and stock.stock_code not like '688%')
               and stock.stock_code = detail.stock_code
@@ -101,12 +101,12 @@ where trade_date = date'2024-10-18'
 
 
 select t.zd, t.*
-from stock_trade_dn t
+from stock_trade t
 where stock_name = '中信证券'
   and (zd < -4 or zd > 4)
 order by trade_date desc;
 select t.zd, t.*
-from stock_trade_dn t
+from stock_trade t
 where stock_name = '中信证券'
   and zd > 4
 order by trade_date desc;

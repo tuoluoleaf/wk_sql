@@ -7,10 +7,10 @@ select trade.stock_code,
        tradeB2.zd,
        tradeB1.zd,
        trade.zd
-from stock_trade_dn trade,
-     stock_trade_dn tradeB1,
-     stock_trade_dn tradeB2,
-     stock_trade_dn tradeB3,
+from stock_trade trade,
+     stock_trade tradeB1,
+     stock_trade tradeB2,
+     stock_trade tradeB3,
      stock_base_info sbi
 where 1 = 1
   -- 排除：创业板、科创板

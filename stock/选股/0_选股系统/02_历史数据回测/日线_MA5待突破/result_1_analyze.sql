@@ -11,8 +11,8 @@ select t.stock_code,
        t1.lowest_price >= t.close_price * 0.99                            as t1_toUp,
        t1.zd
 from stock_result_1 t,
-     stock_trade_dn t1,
-     stock_trade_dn t2
+     stock_trade t1,
+     stock_trade t2
 where t.stock_code = t1.stock_code
   and t1.trade_date = get_trade_day(t.trade_date, 1)
   and t2.stock_code = t.stock_code

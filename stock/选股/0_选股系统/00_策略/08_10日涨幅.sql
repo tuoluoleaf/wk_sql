@@ -8,11 +8,11 @@ from (select tmp1.*,
                    trade.stock_code,
                    trade.stock_name,
                    round((select (trade.close_price - trade1.close_price) / trade1.close_price * 100
-                          from stock_trade_dn trade1
+                          from stock_trade trade1
                           where trade1.stock_code = trade.stock_code
                             and trade1.trade_date = get_trade_day(trade.trade_date, -10)), 2) as zd_10,
                    trade.zd
-            from stock_trade_dn trade
+            from stock_trade trade
             where 1 = 1
               and trade.trade_date = date'2025-06-06'
 #               and trade.trade_date >= date'2025-05-15'

@@ -9,7 +9,7 @@ select base.stock_code,
        base.lt_market_value
 from (select trade.stock_code,
              count(0) as num
-      from stock_trade_dn trade,
+      from stock_trade trade,
              stock_base_info base1
       where (trade.stock_code not like '30%' and trade.stock_code not like '688%')
         and base1.stock_code = trade.stock_code

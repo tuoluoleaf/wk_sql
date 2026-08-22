@@ -11,8 +11,8 @@ select zt.trade_date,
        zt.zt_time_level,
        tradeA1.zd as next_zd
 from stock_zt zt,
-     stock_trade_dn tradeA1,
-     stock_trade_dn tradeB1
+     stock_trade tradeA1,
+     stock_trade tradeB1
 where 1 = 1
   and (zt.stock_code not like '30%' and zt.stock_code not like '688%' and zt.stock_code not like '4' and zt.stock_code not like '8%')
   and zt.zt_continue_num = 1
@@ -44,8 +44,8 @@ select zb.trade_date,
        zb.first_zt_time,
        tradeA1.zd as next_zd
 from stock_zb zb,
-     stock_trade_dn tradeA1,
-     stock_trade_dn tradeB1
+     stock_trade tradeA1,
+     stock_trade tradeB1
 where 1 = 1
   and (zb.stock_code not like '30%' and zb.stock_code not like '688%' and zb.stock_code not like '4' and zb.stock_code not like '8%')
   and zb.first_zt_time <= '09:40:00'

@@ -6,7 +6,7 @@ select stock.stock_code,
        (select t1.industry_name from stock_base_info t1 where t1.stock_code = stock.stock_code)   as industry_name,
        (select t1.lt_market_value from stock_base_info t1 where t1.stock_code = stock.stock_code) as lt_market_value
 from stock_base_info stock,
-     stock_trade_dn trade
+     stock_trade trade
 where 1 = 1
   and (stock.stock_code not like '30%' and stock.stock_code not like '688%')
   and stock.stock_code = trade.stock_code

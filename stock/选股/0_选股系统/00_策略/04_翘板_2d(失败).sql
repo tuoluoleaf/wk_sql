@@ -9,8 +9,8 @@ select dt.trade_date,
        tradeA2.zd                     as d2_next,
        (10 + tradeA1.zd + tradeA2.zd) as qb_sy
 from stock_dt dt,
-     stock_trade_dn tradeA1,
-     stock_trade_dn tradeA2
+     stock_trade tradeA1,
+     stock_trade tradeA2
 where 1 = 1
   and (dt.stock_code not like '30%' and dt.stock_code not like '688%')
   and tradeA1.stock_code = dt.stock_code
@@ -38,8 +38,8 @@ select dt.trade_date,
        tradeA2.zd                     as d2_next,
        (10 + tradeA1.zd + tradeA2.zd) as qb_sy
 from stock_dt dt,
-     stock_trade_dn tradeA1,
-     stock_trade_dn tradeA2
+     stock_trade tradeA1,
+     stock_trade tradeA2
 where 1 = 1
   and (dt.stock_code not like '30%' and dt.stock_code not like '688%')
   and tradeA1.stock_code = dt.stock_code

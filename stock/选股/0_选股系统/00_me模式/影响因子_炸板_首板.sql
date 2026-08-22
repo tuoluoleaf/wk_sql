@@ -6,10 +6,10 @@ select trade.trade_date,
        stock.lt_market_value,
        round(trade.trade_money / 100000000, 2)                                                                                             as trade_money,
        stock.industry_name,
-       (select t1.zd from stock_trade_dn t1 where t1.stock_code = trade.stock_code and t1.trade_date = get_trade_day(trade.trade_date, 1)) as next_zd
+       (select t1.zd from stock_trade t1 where t1.stock_code = trade.stock_code and t1.trade_date = get_trade_day(trade.trade_date, 1)) as next_zd
 from stock_base_info stock,
-     stock_trade_dn trade,
-     stock_trade_dn tradeB1,
+     stock_trade trade,
+     stock_trade tradeB1,
      stock_ma_dn ma
 where 1 = 1
   and (stock.stock_code not like '30%' and stock.stock_code not like '688%')

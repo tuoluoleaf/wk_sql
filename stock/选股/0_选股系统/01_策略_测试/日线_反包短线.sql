@@ -8,9 +8,9 @@ select ma.stock_code,
 from
      stock_base_info sbi,
      stock_ma_dn ma,
-     stock_trade_dn tradeB1,
-     stock_trade_dn trade
-     left join stock_trade_dn tradeA1 on tradeA1.stock_code = trade.stock_code and tradeA1.trade_date = get_trade_day(trade.trade_date, 1)
+     stock_trade tradeB1,
+     stock_trade trade
+     left join stock_trade tradeA1 on tradeA1.stock_code = trade.stock_code and tradeA1.trade_date = get_trade_day(trade.trade_date, 1)
 where 1 = 1
   -- 排除：创业板、科创板
   and (ma.stock_code not like '30%' and ma.stock_code not like '688%')

@@ -1,8 +1,8 @@
 select distinct trade.stock_code,
                 trade.stock_name,
                 sbi.industry_name
-from stock_trade_dn trade,
-     stock_trade_dn tradeB1,
+from stock_trade trade,
+     stock_trade tradeB1,
      stock_base_info sbi
 where 1 = 1
   -- 排除：创业板、科创板

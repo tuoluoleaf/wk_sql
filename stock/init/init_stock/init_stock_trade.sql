@@ -1,5 +1,5 @@
 -- 股票TRADE_DN
-create table stock_trade_dn
+create table stock_trade
 (
     id            bigint primary key auto_increment comment '主键id',
     stock_code    varchar(10) comment '股票代码',
@@ -23,8 +23,8 @@ create table stock_trade_dn
     create_time   datetime    default current_timestamp                             null comment '创建时间',
     update_by     varchar(64) default 'sys'                                         null comment '更新者',
     update_time   datetime    default current_timestamp on update current_timestamp null comment '更新时间'
-) comment '股票交易_日线未复权';
-create unique index idx_stock_trade_dn on stock_trade_dn (stock_code, trade_date);
-create index idx_stock_trade_dn_date on stock_trade_dn (trade_date);
-create index idx_stock_trade_stock_name on stock_trade_dn (stock_name);
-create index idx_stock_trade_dn_1 on stock_trade_dn (stock_code, zd_remark, level_num);
+) comment '股票交易_日线';
+create unique index idx_stock_trade on stock_trade (stock_code, trade_date);
+create index idx_stock_trade_date on stock_trade (trade_date);
+create index idx_stock_trade_stock_name on stock_trade (stock_name);
+create index idx_stock_trade_1 on stock_trade (stock_code, zd_remark, level_num);

@@ -4,9 +4,9 @@ from (select trade.trade_date,
              trade.stock_name,
              round(trade.trade_money / 100000000, 2)                                                                                             as trade_money,
              trade.zd,
-             (select t1.zd from stock_trade_dn t1 where t1.stock_code = trade.stock_code and t1.trade_date = get_trade_day(trade.trade_date, 1)) as next_zd,
+             (select t1.zd from stock_trade t1 where t1.stock_code = trade.stock_code and t1.trade_date = get_trade_day(trade.trade_date, 1)) as next_zd,
              row_number() over (partition by trade_date order by trade_money desc)                                                                  rn
-      from stock_trade_dn trade
+      from stock_trade trade
       where 1 = 1
         and (trade.stock_code not like '30%' and trade.stock_code not like '688%')
         and trade.trade_date = date'2024-10-24'

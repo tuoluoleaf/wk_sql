@@ -7,9 +7,9 @@ select trade.stock_code,
        trade.zd,
        tradeB1.zd as zd_b1,
        tradeB2.zd as zd_b2
-from stock_trade_dn trade,
-     stock_trade_dn tradeB1,
-     stock_trade_dn tradeB2
+from stock_trade trade,
+     stock_trade tradeB1,
+     stock_trade tradeB2
          left join stock_base_info sbi on sbi.stock_code = tradeB2.stock_code
 where 1 = 1
   -- 排除：创业板、科创板

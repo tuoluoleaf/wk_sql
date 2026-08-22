@@ -2,7 +2,7 @@ select trade.stock_code,
        trade.stock_name,
        round((max(trade.highest_price) - min(trade.lowest_price)) / min(trade.lowest_price) * 100, 2) as max_zd
 
-from stock_trade_dn trade
+from stock_trade trade
 where 1 = 1
   -- 排除：创业板、科创板
   and (trade.stock_code not like '30%' and trade.stock_code not like '688%')

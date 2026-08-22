@@ -6,7 +6,7 @@ select ma.stock_code,
        trade.close_price,
        trade.zd
 from stock_ma_dn ma,
-     stock_trade_dn trade
+     stock_trade trade
          left join stock_base_info sbi on sbi.stock_code = trade.stock_code
 where 1 = 1
   -- 排除：创业板、科创板

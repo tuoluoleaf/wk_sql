@@ -9,7 +9,7 @@ select t.stock_code,
        round((t1.lowest_price - t.close_price) / t.close_price * 100, 2) as py,
        t1.lowest_price >= t.close_price * 1                              as toUp
 from stock_result_1 t,
-     stock_trade_dn t1
+     stock_trade t1
 where t.stock_code = t1.stock_code
   and t1.trade_date = get_trade_day(t.trade_date, 1)
 order by t.trade_date desc, t.industry_name

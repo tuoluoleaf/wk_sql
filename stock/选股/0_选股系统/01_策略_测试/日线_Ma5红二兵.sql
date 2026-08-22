@@ -6,10 +6,10 @@ select ma.stock_code,
        trade.zd,
        ma.ma5
 from stock_ma_dn ma,
-     stock_trade_dn trade,
+     stock_trade trade,
      stock_ma_dn maB1,
-     stock_trade_dn tradeB1,
-     stock_trade_dn tradeB2,
+     stock_trade tradeB1,
+     stock_trade tradeB2,
      stock_base_info sbi
 where 1 = 1
   -- 排除：创业板、科创板
